@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Bayesian Risk">
+  <meta name="keywords" content="Risk, Safety, Planning">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bayesian Risk</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <link rel="icon" href="./static/images/favicon.svg">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <!-- <img src="./static/images/logo.svg"
+          alt="Logo" /> -->
+          <h1 class="title is-1 publication-title"> Bayesian Risk Quantification from Safe Human Demonstrations and Common Sense </h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="">Anonymous</a><sup></sup>
+            </span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/riskbayesian/bayesian_risk"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/pipeline.png"
+               alt="Architecture."
+      />
+      <p class="has-text-justified"></p>
+      <span class="method">Bayesian Risk Pipeline</span>
+        Under construction
+    </div>
+  </div>
+</section> -->
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Humans interpret safety not as a binary signal but as a continuous, context- and spatially-dependent notion of risk. While risk is subjective, humans form rational mental models that guide action selection in dynamic environments (i.e. if A is riskier than B, and B is riskier than C, then A is riskier than C). The objective of this work is to extract the implicit risk model by introducing a novel, semantically-conditioned and spatially-varying parametrization of risk, supervised directly from only safe human demonstration videos and common sense. First, we define risk through a Bayesian formulation. Next, our framework integrates semantic scene understanding, using pretrained vision-language models (e.g., DINOv3), to map feature images to risk images. Moreover, due to the common sense reasoning present in large language models, LLMs can be used to both enact broad rulesets about risk in the form of a prior and distill reasoning capabilities into our framework. Our pipeline produces pixel-dense risk images that can then be used as value-predictors in planning tasks or be projected into 3D for use in conventional trajectory optimization to produce human-like motion. This learned mapping enables generalization to novel objects and contexts, with the potential to scale training to large datasets. In particular, the Bayesian framework that is introduced enables adaptation of our model to additional observations or common sense rules. We demonstrate that our proposed framework produces contextual risk that is aligned with human preferences. Additionally, we illustrate several enticing downstream applications of the model, such as using it to effectively reduce risk in image-based planning tasks in-the-wild or in conjunction with classical trajectory optimization algorithms. Our results suggest that the proposed method is a leap toward enabling autonomous systems to internalize human-like risk reasoning.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<!-- Hardware -->
+<section class="section">
+   <!-- Open Loop -->
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Hardware Experiments</h2>
+        <p>
+          Under construction
+        </p>
+        <br/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>. This webpage template is from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+            We sincerely thank <a href="https://keunhong.com/">Keunhong Park</a> for developing and open-sourcing this template.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
