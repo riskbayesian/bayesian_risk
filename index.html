@@ -76,6 +76,71 @@
   </div>
 </section> -->
 
+<!-- Demonstrations Section -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Demonstrations</h2>
+        
+        <!-- Dropdown Controls -->
+        <div class="columns is-centered">
+          <div class="column is-narrow">
+            <div class="field">
+              <label class="label">Environment</label>
+              <div class="control">
+                <div class="select">
+                  <select id="environment-select">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-narrow">
+            <div class="field">
+              <label class="label">Image Type</label>
+              <div class="control">
+                <div class="select">
+                  <select id="image-type-select">
+                    <option value="Posterior">Posterior</option>
+                    <option value="Prior">Prior</option>
+                    <option value="Likelihood">Likelihood</option>
+                    <option value="Reasoning">Reasoning</option>
+                    <option value="Object ID">Object ID</option>
+                    <option value="RGB">RGB</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video and Graph Display -->
+        <div class="columns is-centered" id="demo-content" style="margin-top: 2rem; display: none;">
+          <div class="column is-half">
+            <div class="box has-text-centered">
+              <h3 class="subtitle is-5">Video</h3>
+              <video id="demo-video" controls style="width: 100%; max-width: 500px;">
+                <source id="video-source" src="" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="box has-text-centered">
+              <h3 class="subtitle is-5">Risk Graph</h3>
+              <img id="risk-graph" src="" alt="Risk Graph" style="width: 100%; max-width: 500px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section">
   <div class="container is-max-desktop">
     <!-- Abstract. -->

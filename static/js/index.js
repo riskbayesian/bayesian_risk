@@ -75,4 +75,34 @@ $(document).ready(function() {
 
     bulmaSlider.attach();
 
+    // Demonstrations section functionality
+    function updateDemoContent() {
+        const environment = document.getElementById('environment-select').value;
+        const imageType = document.getElementById('image-type-select').value;
+        const demoContent = document.getElementById('demo-content');
+        
+        // Show the content area when selections are made
+        demoContent.style.display = 'flex';
+        
+        // Convert image type to filename format (lowercase, replace spaces with underscores)
+        const imageTypeFilename = imageType.toLowerCase().replace(/\s+/g, '_');
+        
+        // Update video source
+        const videoSource = document.getElementById('video-source');
+        const videoElement = document.getElementById('demo-video');
+        videoSource.src = `./static/scenes/scene_${environment}/videos/${imageTypeFilename}.mp4`;
+        videoElement.load();
+        
+        // Update risk graph image
+        const riskGraph = document.getElementById('risk-graph');
+        riskGraph.src = `./static/scenes/scene_${environment}/risk_graphs/${imageTypeFilename}.png`;
+        riskGraph.alt = `${imageType} Risk Graph for Environment ${environment}`;
+    }
+
+    // Add event listeners for dropdown changes
+    document.getElementById('environment-select').addEventListener('change', updateDemoContent);
+    document.getElementById('image-type-select').addEventListener('change', updateDemoContent);
+    
+    // Don't initialize content on page load - wait for user selection
+
 })
