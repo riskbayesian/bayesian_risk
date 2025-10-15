@@ -1,0 +1,52 @@
+# Inference configuration for RiskField dense inference with Prior model multiplication
+# All fields are REQUIRED. Update paths as needed before running.
+
+frame_range: null #[0,2]
+
+# Inputs
+#image_a: "all_images/imgs_0/color_0087.png"
+#image_a: "data/IMG_0140.MOV"  # Arbitrary image path for dense map (object A)
+image_a: "data/data_09_22_2025"
+image_b:
+  - "all_images/solo.png"               # Reference image path for average vector (object B)
+  - "all_images/images/knife.png"
+  #- "all_images/images/cup.png"
+  - "all_images/images/laptop.png"
+  - "all_images/images/pot.png"
+  - "all_images/images/stove.png"
+  - "all_images/images/stuffed_penguin.png"
+  #- "all_images/images/water_bottle.png"
+
+# RiskField Model (trained on histogram data)
+# Good one, sent 09/22/2025 02:55, 25 dino_per_obj
+# /home/admin/Projects/open_world_risk/riskfield_output/09_22_2025_4/inference_0933_0922
+#riskfield_ckpt: "checkpoints_riskfield/09_22_2025_1758531784_meet-wombat/riskfield_best_09_22_2025_1758531784_meet-wombat.pt"
+#riskfield_cfg: "checkpoints_riskfield/09_22_2025_1758531784_meet-wombat/train_config.yaml"
+# 100 dino_per_obj
+# /home/admin/Projects/open_world_risk/riskfield_output/09_22_2025_4/inference_1052_0922
+riskfield_ckpt: "checkpoints_riskfield/09_22_2025_1758537662_sunny-filly/riskfield_best_09_22_2025_1758537662_sunny-filly.pt"
+riskfield_cfg: "checkpoints_riskfield/09_22_2025_1758537662_sunny-filly/train_config.yaml"
+
+# DINO weights
+dino_weights: "open_world_risk/src/pretrained_models/dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth"
+
+video_batch_size: 2
+frame_batch_size: 5
+videos_range: [0,20]
+
+# Outputs
+out_dir: "riskfield_output/09_22_2025_5" # TODO: change this to something else more meaningful
+device: "cuda"
+target_h: 512
+patch: 16
+stride: 4
+mask_white: 0.98
+mask_alpha: 0.01
+norm: true
+save_probs: true
+upsample_to_image: true
+cmap: "turbo"
+overlay_alpha: 0.5
+scale: "auto" #"fixed"
+max_distance: 0.5  # Maximum distance in meters for risk field evaluation
+

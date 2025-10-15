@@ -1,0 +1,91 @@
+mode: query
+paths:
+  input_type: image              # image | folder | video
+  image: /workspace/data/zed/shelf_full/rgb_png/000000.png
+  model_dir: data/prior_GPT_data_09_14_2025/lut_model    # or provide objects_root/objects_csv/pairs_csv to build on the fly
+  output_root: /workspace/data/test/prior  # optional; defaults to sibling "<folder>_out"
+params:
+  device: cuda
+  nn_backend: torch              # torch | faiss
+  gemm_chunk: 20000
+  allow_tf32: true
+  target_h_query: 560
+inference:
+  object_B: "cup"
+  topk: 5
+  soft: true
+  temperature: 20.0
+  default_unknown: 0.5
+visualization:
+  colored: true
+  overlay: true
+  alpha: 0.5
+  cmap: turbo
+  resize_to_original: true
+
+# OUTDATED for single image
+# mode: query   # build | query | both
+
+# paths:
+#   # For build:
+#   objects_root: data/prior_GPT_data_09_14_2025/object_images       # folder of per-object subdirs
+#   objects_csv:  data/prior_GPT_data_09_14_2025/objects_with_images.csv
+#   pairs_csv:    data/prior_GPT_data_09_14_2025/object_pair_safety_ratings_filtered.csv
+#   out_dir:      data/prior_GPT_data_09_14_2025/lut_model
+
+#   # For query:
+#   model_dir: data/prior_GPT_data_09_14_2025/lut_model         # optional if you already built
+#   image:     data/000412.png                  # required for query
+#   risk_out:  risk.npy             # optional; defaults to scene.risk.npy
+#   risk_png:  scene_risk.png     # optional; default: scene.risk.png
+
+#   id_png: scene_id.png         # optional custom path
+#   id_legend: scene_legend.json # optional custom path
+
+#   reason_png: scene_reason.png
+#   reason_legend_png: scene_reason.legend.png
+
+# visualization:
+#   resize_to_original: true   # default I set
+#   colored: true          # save a color heatmap PNG
+#   cmap: turbo          # any matplotlib colormap
+#   colorbar: true
+#   overlay: true          # overlay heatmap on the RGB
+#   alpha: 0.5             # overlay transparency
+#   dpi: 150
+#   colored_out: scene_risk_colored.png   # optional
+#   overlay_out: scene_risk_overlay.png   # optional
+#   save_id_png: False            # save the ID image (default true)
+#   id_unknown_color: [0, 0, 0]  # RGB for unknowns (default black)
+#   save_numpy: false # save the numpy array of the risk
+#   save_reason_png: true                    # enable/disable reasoning PNG
+#   reason_unknown_color: [0, 0, 0]          # RGB for unknown (< τ)
+#   reason_missing_color: [255, 255, 255]    # RGB for missing (A,B) pair
+#   reason_none_color: [128, 128, 128]       # RGB for empty reason strings
+
+# params:
+#   device: cuda                # cuda | cpu
+#   K: 32                       # prototypes per object
+#   per_image_samples: 1024      # sampled tokens per training image
+#   target_h_build: 224         # DINO resize height for building prototypes
+#   target_h_query: 560         # DINO resize height for dense inference
+#   exclude_patterns: ["_pca"]  # skip PCA previews etc.
+#   pairs_symmetric: true            # enable order-invariant pairs
+#   pairs_conflict_policy: "mean"    # mean | first | max
+#   faiss_chunk: 200000   # reduce if you hit RAM limits; increase for speed if you can
+
+#   nn_backend: "torch"    # "torch" | "faiss"  (default: "faiss")
+#   gemm_chunk: 20000      # rows per chunk for torch GEMM
+#   allow_tf32: true       # enable TF32 on Ampere+ for extra speed
+
+# inference:
+#   object_B: "stove"          # manipulated/queried object name
+#   topk: 5
+#   soft: true                  # soft expectation over objects; false = top-1
+#   open_set_threshold: 0.2    # cosine threshold for unknowns
+#   temperature: 20.0
+#   default_unknown: 0.5
+
+# debug:
+#   save_debug_maps: false
+#   save_pair_miss_map: false

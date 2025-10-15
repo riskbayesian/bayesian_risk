@@ -1,0 +1,74 @@
+services:
+
+  # Using pre-built images from Docker Hub (will be updated by compose_up.sh)
+  base:
+    image: doku88/my-shared-base:latest
+    entrypoint: ["echo", "Base image pulled from Docker Hub"]
+
+  main:
+    # docker run command interactive:
+    # docker run -it --rm \
+    #   --runtime=nvidia --gpus all \
+    #   -p 5001:5000 \
+    #   -v $(pwd):/workspace -w /workspace \
+    #   open_world_risk_main \
+    #   bash
+    image: doku88/open_world_risk_main:latest
+    ports:
+      - "5001:5000"
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    environment:
+      - PYTHONWARNINGS=ignore::FutureWarning
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    depends_on:
+      - hoist_former
+    #command: /bin/bash -c "source /home/ubuntu/miniconda3/etc/profile.d/conda.sh && conda activate feature_splatting2 && python utils/docker_torch_cuda_test.py"
+    #command: /bin/bash -c "source /home/ubuntu/miniconda3/etc/profile.d/conda.sh && conda activate feature_splatting2 && python src/main_docker_container_comm_test.py"
+    command: /bin/bash -c "source /home/ubuntu/miniconda3/etc/profile.d/conda.sh && conda activate feature_splatting2 && python src/process_video.py"
+
+  hoist_former:
+    # docker run command interactive:
+    # docker run -it --rm \
+    #   --runtime=nvidia --gpus all \
+    #   -p 5002:5000 \
+    #   -v $(pwd):/workspace -w /workspace \
+    #   open_world_risk_hoist_former \
+    #   bash
+    image: doku88/open_world_risk_hoist_former:latest
+    ports:
+      - "5002:5000"
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    environment:
+      - PYTHONWARNINGS=ignore::FutureWarning
+      - PYTHONPATH=/workspace/hoist_former/Mask2Former
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    #command: /bin/bash -c "source /home/ubuntu/miniconda3/etc/profile.d/conda.sh && conda activate hoist && python utils/docker_torch_cuda_test.py"
+    command: >
+      /bin/bash -c "
+      source /home/ubuntu/miniconda3/etc/profile.d/conda.sh &&
+      conda activate hoist2 &&
+      cd /workspace/hoist_former/Mask2Former &&
+      pip install -qq -r requirements.txt &&
+      cd mask2former/modeling/pixel_decoder/ops &&
+      sh make.sh > /dev/null 2>&1 &&
+      pip install -qq setuptools==59.5.0 &&
+      cd /workspace &&
+      python -c 'import mask2former; print(\"🚀🚀🚀 Mask2Former import successful! 🚀🚀🚀\")' &&
+      python hoist_former/api/endpoints.py
+      "

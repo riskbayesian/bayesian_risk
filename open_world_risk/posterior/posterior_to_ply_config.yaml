@@ -1,0 +1,25 @@
+paths:
+  cp_npy: /workspace/data/hardware/test/likelihood/npy/rgb.npy      # [K,H,W] or [H,W,K]
+  prior:  /workspace/data/hardware/test/prior/risk_gray/rgb.png           # float32 HxW in [0,1]; NO normalization applied
+  correspondences: /workspace/data/hardware/test/correspondences.json      # {"points":[{"x":..,"y":..,"z":..,"u":..,"v":..},...]}
+  out_points_ply: /workspace/data/hardware/test/ply/rgb_points.ply
+  out_mesh_ply:   /workspace/data/hardware/test/ply/rgb_mesh.ply
+
+params:
+  threshold: 0.1
+  fallback_distance: 0.1
+  max_distance: 0.1
+  max_points: 100000
+  samples: 512
+  uv_round: nearest   # nearest | floor | ceil
+  seed: 42
+
+mesh:
+  method: stacked_spheres   # union_voxel_mc | stacked_spheres
+  voxel_size: 0.01         # world units per voxel (lower -> finer, slower)
+  margin: 0.01             # extra padding around bounding box
+  iso_level: 0.0           # SDF iso-surface (0=union boundary)
+  max_grid: 16            # clamp longest grid dim (RAM/time safety)
+  sphere_n_lat: 4         # (stacked_spheres) latitude segments
+  sphere_n_lon: 4         # (stacked_spheres) longitude segments
+  stacked_max_spheres: null  # optional limit if spheres are many (None disables)

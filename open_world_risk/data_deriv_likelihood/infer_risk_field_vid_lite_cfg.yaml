@@ -1,0 +1,33 @@
+# Inference configuration for RiskField dense inference with Prior model multiplication
+# All fields are REQUIRED. Update paths as needed before running.
+
+# Inputs
+env_rgb: "/workspace/data/hardware/test/rgb_png/rgb.png"
+env_depth: "/workspace/data/hardware/test/depth_png_mm/depth.png"
+env_depth_mask: null
+image_b: "all_images/images/cup.png"               # Reference image path for average vector (object B)
+
+# RiskField Model (trained on histogram data)
+riskfield_ckpt: "checkpoints_riskfield/09_22_2025_1758537662_sunny-filly/riskfield_best_09_22_2025_1758537662_sunny-filly.pt"
+riskfield_cfg: "checkpoints_riskfield/09_22_2025_1758537662_sunny-filly/train_config.yaml"
+
+# DINO weights
+dino_weights: "open_world_risk/src/pretrained_models/dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth"
+
+# Outputs
+out_dir: "/workspace/data/hardware/test/likelihood"
+out_path: "riskfield_at_depth.npy" # TODO: change this to something else more meaningful
+device: "cuda"
+target_h: 512
+patch: 16
+stride: 4
+mask_white: 0.98
+mask_alpha: 0.01
+norm: true
+save_probs: true
+upsample_to_image: true
+cmap: "turbo"
+overlay_alpha: 0.5
+scale: "auto" #"fixed"
+max_distance: 2.0  # Maximum distance in meters for risk field evaluation
+

@@ -1,0 +1,65 @@
+paths:
+  # Top-level directory to scan recursively
+  root_dir: /workspace/data/zed
+  # Name of the subfolder that contains the RGB frames for each scene
+  image_subdir: rgb_png
+
+  # EITHER give a prebuilt LUT model dir...
+  model_dir: data/prior_GPT_data_09_14_2025/lut_model
+  # ...OR provide raw sources to build LUT on the fly (omit model_dir if using these)
+  # objects_root: /data/objects_bank
+  # objects_csv: /data/objects_with_images.csv
+  # pairs_csv: /data/object_pair_safety_ratings_filtered.csv
+
+params:
+  device: cuda
+  nn_backend: torch       # torch | faiss
+  gemm_chunk: 20000
+  allow_tf32: true
+  target_h_query: 560
+  # Build-time params if building from raw:
+  K: 32
+  target_h_build: 224
+  per_image_samples: 512
+  exclude_patterns: ["_pca"]
+  pairs_symmetric: true
+  pairs_conflict_policy: mean
+  faiss_chunk: 100000
+
+inference:
+  topk: 5
+  soft: true
+  temperature: 20.0
+  default_unknown: 0.5
+  open_set_threshold: 0.5
+
+# All object_B values you want to run
+object_B_list:
+  - paper plate
+  - book
+  - cup
+  - knife
+  - laptop
+  - pot
+  - scissors
+  - solo cup
+  - stove
+  - stuffed penguin
+  - water bottle
+  - markers
+
+visualization:
+  colored: true
+  overlay: true
+  alpha: 0.5
+  cmap: turbo
+  resize_to_original: true
+  id_unknown_color: [0, 0, 0]
+
+pipeline:
+  io_threads: 6       # number of loader threads per (folder × object_B) task
+  io_queue_size: 64   # prefetch queue size
+  frame_stride: 3   # process 1 of every 3 frames; default = 1 (no skipping)
+  
+debug:
+  save_numpy: false

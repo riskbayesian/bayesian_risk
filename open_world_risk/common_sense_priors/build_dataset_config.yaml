@@ -1,0 +1,32 @@
+# Configuration file for build_dataset.py
+# This file contains all configurable parameters for DINO feature extraction
+
+data:
+  data_dir: "data/prior_GPT_data_09_14_2025"
+  objects_csv: "objects_with_images.csv"
+  object_pairs_csv: "object_pair_safety_ratings_filtered.csv"
+  object_images_dir: "object_images"
+  
+  output_summary: "feature_extraction_summary.txt"
+
+dino:  
+  # Image preprocessing
+  target_height: 224
+  
+  # Feature extraction
+  feature_dim: 1024  # Expected DINO feature dimension
+  use_global_average_pooling: false
+  num_rand: 10
+
+# Processing configuration
+processing:
+  image_extensions:
+    - ".jpg"
+    - ".jpeg" 
+    - ".png"
+    - ".JPG"
+    - ".JPEG"
+    - ".PNG"
+
+# Sample size configuration
+sample_size: 100
