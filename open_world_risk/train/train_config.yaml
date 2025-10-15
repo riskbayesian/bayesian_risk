@@ -1,0 +1,53 @@
+# Training Configuration for RiskField Model
+# This file contains all configurable parameters for training the RiskField model
+
+# =============================================================================
+# REQUIRED PARAMETERS
+# =============================================================================
+#tensor_dir: "output/dataset_09_20_2025_1758358350/"  # Directory containing .pt tensor files
+tensor_dir: "output/dataset_09_22_2025_1758535311_tidy-poodle/"
+out_dir: "./checkpoints_riskfield"                    # Output directory for checkpoints
+
+# =============================================================================
+# WANDB CONFIGURATION
+# =============================================================================
+wandb:
+  project: "open_world_risk_0"
+  run_name: "rf_bezier_supervision"
+  entity: "userA"  # Set to null if not using entity
+
+# =============================================================================
+# TENSOR LAYOUT CONFIGURATION
+# =============================================================================
+tensor_layout:
+  feat_size: 1024    # DINO feature dimension per object
+  hist_size: 100     # Histogram size
+  ctrl_pts: 10       # Number of Bezier control points
+
+# =============================================================================
+# MODEL HYPERPARAMETERS
+# =============================================================================
+model:
+  projection_dim: 256        # Projection dimension for features
+  num_layers: 2             # Number of MLP layers
+  num_neurons: 512          # Number of neurons per layer
+  num_layers_trans: 2       # Number of transformer layers
+  num_heads: 8             # Number of attention heads
+  attn_dropout: 0.1        # Attention dropout rate
+  monotonic: true          # Use monotonic constraints
+  compute_covariances: false # Compute covariance matrices
+
+# =============================================================================
+# TRAINING CONFIGURATION
+# =============================================================================
+training:
+  device: "cuda"           # Device to use (cuda/cpu)
+  seed: 1337              # Random seed for reproducibility
+  batch_size: 65536         # Training batch size
+  epochs: 50              # Number of training epochs
+  lr: 0.001              # Learning rate
+  weight_decay: 0.0001    # Weight decay for regularization
+  grad_clip: 1.0          # Gradient clipping threshold
+  val_split: 0.1          # Validation split ratio
+  num_workers: 12          # Number of data loader workers
+  amp: false               # Use automatic mixed precision

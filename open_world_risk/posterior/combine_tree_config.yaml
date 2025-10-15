@@ -1,0 +1,32 @@
+paths:
+  parent_dir: /home/userA/Research/open_world_risk/data/workspace_full    # contains likelihood_{obj}, prior_{obj}
+  likelihood_prefix: likelihood_
+  prior_prefix: prior_
+  posterior_prefix: posterior_
+  likelihood_gray_subdir: greyscale
+  prior_gray_subdir: risk_gray
+  depth_subdir: depth_png_mm
+  depth_mask_subdir: depth_valid_mask
+
+objects:
+  - paper plate
+  - book
+  - cup
+  - knife
+  - laptop
+  - pot
+  - scissors
+  - solo cup
+  - stove
+  - stuffed penguin
+  - water bottle
+
+params:
+  depth_scale: 0.001   # mm -> meters (set 1.0 if your depth is already meters)
+
+visualization:
+  colormap: turbo
+  save_colored: true
+
+save:
+  overwrite: true

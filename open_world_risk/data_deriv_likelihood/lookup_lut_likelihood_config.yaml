@@ -1,0 +1,93 @@
+mode: query   # build | query | both
+
+paths:
+  # For build:
+  # List of .pt files containing [dino_feat_a, dino_feat_b, control_pts]
+  # THESE ARE OUR DATASET FILES
+  dataset_files: 
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_18_35.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_18_44.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_18_53.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_19_01.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_19_14.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_19_28.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_19_37.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_19_51.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_20_09.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_20_19.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_20_34.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_20_57.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/histogram_tensor_22_09_2025_07_21_28.pt
+  # Origin: dataset_creator.match_dino_to_label_wrapper()
+  label_to_id_filename: output/dataset_09_22_2025_1758525489_deep-swine/label_to_id.csv  # CSV with label,id columns
+  id_to_dino_feat_filenames: 
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_0_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_1_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_2_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_3_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_4_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_5_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_6_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_7_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_8_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_9_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_10_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_11_0.pt
+    - output/dataset_09_22_2025_1758525489_deep-swine/id_to_dino_feat_video_12_0.pt
+  
+  # List of PyTorch files containing {"ids": tensor, "data": tensor}
+  out_dir:      models/lookup_lut_likelihood
+
+  # For query:
+  model_dir: models/lookup_lut_likelihood        # optional if you already built
+  image:     all_images/imgs_0/color_0087.png                  # required for query
+  risk_out:  risk.npy             # optional; defaults to scene.risk.npy
+  risk_png:  scene_risk.png     # optional; default: scene.risk.png
+
+  id_png: scene_id.png         # optional custom path
+  id_legend: scene_legend.json # optional custom path
+
+visualization:
+  resize_to_original: true   # default I set
+  colored: true          # save a color heatmap PNG
+  cmap: turbo          # any matplotlib colormap
+  colorbar: true
+  overlay: true          # overlay heatmap on the RGB
+  alpha: 0.5             # overlay transparency
+  dpi: 150
+  colored_out: scene_risk_colored.png   # optional
+  overlay_out: scene_risk_overlay.png   # optional
+  save_id_png: False            # save the ID image (default true)
+  id_unknown_color: [0, 0, 0]  # RGB for unknowns (default black)
+  save_numpy: false # save the numpy array of the risk
+  save_reason_png: true                    # enable/disable reasoning PNG
+  reason_unknown_color: [0, 0, 0]          # RGB for unknown (< τ)
+  reason_missing_color: [255, 255, 255]    # RGB for missing (A,B) pair
+  reason_none_color: [128, 128, 128]       # RGB for empty reason strings
+
+params:
+  device: cuda                # cuda | cpu
+  K: 1 #32                       # prototypes per object
+  per_image_samples: 1024      # sampled tokens per training image
+  target_h_build: 224         # DINO resize height for building prototypes
+  target_h_query: 560         # DINO resize height for dense inference
+  exclude_patterns: ["_pca"]  # skip PCA previews etc.
+  pairs_symmetric: true            # enable order-invariant pairs
+  pairs_conflict_policy: "mean"    # mean | first | max
+  faiss_chunk: 200000   # reduce if you hit RAM limits; increase for speed if you can
+
+  nn_backend: "torch"    # "torch" | "faiss"  (default: "faiss")
+  gemm_chunk: 20000      # rows per chunk for torch GEMM
+  allow_tf32: true       # enable TF32 on Ampere+ for extra speed
+
+inference:
+  object_B: "pot"          # manipulated/queried object name
+  topk: 5
+  soft: true                  # soft expectation over objects; false = top-1
+  open_set_threshold: 0.001 #0.2    # cosine threshold for unknowns
+  temperature: 20.0
+  default_unknown: 0.5
+
+debug:
+  save_debug_maps: true
+  save_pair_miss_map: true

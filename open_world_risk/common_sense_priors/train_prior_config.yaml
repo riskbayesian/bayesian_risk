@@ -1,0 +1,46 @@
+# Training Configuration for RiskField Model
+# This file contains all configurable parameters for training the RiskField model
+
+# =============================================================================
+# REQUIRED PARAMETERS
+# =============================================================================
+tensor_dir: "output/prior_09_17_2025_1758090864"  # Directory containing .pt tensor files
+distribution_stats_path: "output/prior_09_17_2025_1758090864/distribution_stats.pkl"  # Path to distribution stats pickle file
+out_dir: "./checkpoints_riskfield"                    # Output directory for checkpoints
+
+# =============================================================================
+# WANDB CONFIGURATION
+# =============================================================================
+wandb:
+  project: "open_world_risk_prior_0"
+  run_name: "rf_bezier_supervision"
+  entity: "userA"  # Set to null if not using entity
+
+# =============================================================================
+# MODEL HYPERPARAMETERS
+# =============================================================================
+model:
+  projection_dim: 256        # Projection dimension for features
+  num_layers: 2             # Number of MLP layers
+  num_neurons: 512          # Number of neurons per layer
+  num_layers_trans: 2       # Number of transformer layers
+  num_heads: 8             # Number of attention heads
+  attn_dropout: 0.1        # Attention dropout rate
+  monotonic: false         # Use monotonic constraints
+  ctrl_pts: 1 
+
+# =============================================================================
+# TRAINING CONFIGURATION
+# =============================================================================
+training:
+  feat_size: 1024         # DINO feature dimension per object
+  device: "cuda"          # Device to use (cuda/cpu)
+  seed: 1337              # Random seed for reproducibility
+  batch_size: 128         # Training batch size
+  epochs: 25              # Number of training epochs
+  lr: 0.0001              # Learning rate
+  weight_decay: 0.0001    # Weight decay for regularization
+  grad_clip: 1.0          # Gradient clipping threshold
+  val_split: 0.1          # Validation split ratio
+  num_workers: 4          # Number of data loader workers
+  amp: false              # Use automatic mixed precision

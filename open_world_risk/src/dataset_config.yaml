@@ -1,0 +1,19 @@
+processed_video_dir:
+  # First 7 of single #'s'
+  - processed_videos/dataset_09_21_2025_1758423571_apt-chimp
+processed_video_paths:
+  - processed_videos/dataset_09_22_2025_1758508062_fluent-rodent/open_world_risk_project_2025-07-20-17-05-28_dataset
+  - processed_videos/dataset_09_21_2025_1758434485_big-amoeba/open_world_risk_project_2025-07-20-17-25-05_dataset
+
+camera_intrinsics_path: data/camera_intrinsics_07_27_2025.json
+petname: "risk_explorer"
+output_dir: output/dataset_{DATE_EPOCH}_{PETNAME}/
+max_distance: 0.5
+min_entries: 10
+dino_per_obj: 100 # this or min number of items in trajectory
+verbose: false
+object_white_list: data/dino_reference_ims/white_list
+object_black_list: data/dino_reference_ims/black_list
+object_grey_list: data/dino_reference_ims/grey_list
+label_to_id_filename: "label_to_id.csv"
+id_to_dino_feat_filename: "id_to_dino_feat.pt"

@@ -1,0 +1,26 @@
+npz_paths:
+  #- data/open_world_risk_project_2025-07-20-17-02-28
+  #- data/open_world_risk_project_2025-07-20-17-05-28 # using DINO, trying again! Stove, Pot
+  #- data/open_world_risk_project_2025-07-20-17-08-22 # try again: Stove, eraser misclassified! eraser
+  #- data/open_world_risk_project_2025-07-20-17-14-04
+  #- data/open_world_risk_project_2025-07-20-17-15-02
+  #- data/open_world_risk_project_2025-07-20-17-16-05
+  #- data/open_world_risk_project_2025-07-20-17-17-48 # try again:laptop, eraser misclassified! eraser
+  #- data/open_world_risk_project_2025-07-20-17-20-20
+  #- data/open_world_risk_project_2025-07-20-17-22-05
+  #- data/open_world_risk_project_2025-07-20-17-23-45 # failed here...
+  #- data/open_world_risk_project_2025-07-20-17-25-05
+  # hard example, try again after we have good model trained
+  #- data/open_world_risk_project_2025-07-20-17-31-01 # try again: object free for all! # too big need to split!
+  - data/open_world_risk_project_2025-07-20-17-31-01 # try again: object free for all! 
+
+camera_intrinsics_path: data/camera_intrinsics_07_27_2025.json
+output_dir: processed_videos/dataset_{DATE_EPOCH}_{PETNAME}/
+frame_range_lst: [[0, 300]]
+batch_size: 128
+dist_to_line_thres: 0.1
+create_visualizations: true
+save_npys: false
+object_white_list: data/dino_reference_ims/white_list
+object_black_list: data/dino_reference_ims/black_list
+object_grey_list: data/dino_reference_ims/grey_list

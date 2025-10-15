@@ -1,0 +1,12 @@
+paths:
+  # You can make these absolute or relative to this YAML file
+  data_dir: /workspace/data/shelf_full
+  # Optional; defaults to the common parent directory of the two inputs
+  # output_root: /data/scene_out
+
+visualization:
+  colormap: turbo      # any Matplotlib cmap (e.g., viridis, magma, jet, turbo)
+  save_colored: true
+
+save:
+  overwrite: true
