@@ -187,7 +187,7 @@ $(document).ready(function() {
         
         console.log('Found hardware select element:', hardwareSelect);
         
-        hardwareSelect.innerHTML = '<option value="">None</option>';
+        hardwareSelect.innerHTML = '<option value="">Select Item</option>';
         hardwareTrials.forEach(trial => {
             const option = document.createElement('option');
             option.value = trial;
