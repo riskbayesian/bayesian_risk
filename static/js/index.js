@@ -165,8 +165,11 @@ $(document).ready(function() {
         
         // List of available hardware trials (each trial contains 4 videos: ours, vla, human, diffusion)
         const hardwareTrials = [
-            'Trial_6',
-            'Trial_7',
+            'Trial_1',
+            'Trial_2',
+            'Trial_3',
+            'Trial_4',
+            'Trial_5',
             // Add more trials here as you create them, for example:
             // 'Trial_7',
             // 'Trial_8',
