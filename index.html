@@ -24,7 +24,7 @@
   <script defer src="./static/js/fontawesome.all.min.js"></script>
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+  <script src="./static/js/index.js?v=20251019-1412"></script>
 </head>
 <body>
 
@@ -112,7 +112,7 @@
                     <option value="Prior">Prior</option>
                     <option value="Likelihood">Likelihood</option>
                     <option value="Reasoning">Reasoning</option>
-                    <option value="Object ID">Object ID</option>
+                    <!-- <option value="Object ID">Object ID</option> -->
                     <option value="RGB">RGB</option>
                   </select>
                 </div>
@@ -169,10 +169,74 @@
     <div class="columns is-centered">
       <div class="column is-full-width">
         <h2 class="title is-3">Hardware Experiments</h2>
-        <p>
-          Under construction
-        </p>
-        <br/>
+        
+        <!-- Hardware Video Dropdown -->
+        <div class="columns is-centered">
+          <div class="column is-narrow">
+            <div class="field">
+              <label class="label">Hardware Video</label>
+              <div class="control">
+                <div class="select">
+                  <select id="hardware-video-select">
+                    <option value="">None</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hardware Video Display -->
+        <div class="columns is-centered" id="hardware-content" style="margin-top: 2rem; display: none;">
+          <div class="column is-full-width">
+            <div class="box has-text-centered">
+              <h3 class="subtitle is-5">Hardware Experiment Videos</h3>
+              
+              <!-- 2x2 Grid Layout -->
+              <div class="columns is-multiline">
+                <!-- Top Row -->
+                <div class="column is-half">
+                  <div class="has-text-centered">
+                    <h4 class="subtitle is-6">Ours</h4>
+                    <video id="hardware-video-ours" controls style="width: 100%; max-width: 300px;">
+                      <source id="hardware-video-source-ours" src="" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+                <div class="column is-half">
+                  <div class="has-text-centered">
+                    <h4 class="subtitle is-6">VLA</h4>
+                    <video id="hardware-video-vla" controls style="width: 100%; max-width: 300px;">
+                      <source id="hardware-video-source-vla" src="" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+                
+                <!-- Bottom Row -->
+                <div class="column is-half">
+                  <div class="has-text-centered">
+                    <h4 class="subtitle is-6">Human</h4>
+                    <video id="hardware-video-human" controls style="width: 100%; max-width: 300px;">
+                      <source id="hardware-video-source-human" src="" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+                <div class="column is-half">
+                  <div class="has-text-centered">
+                    <h4 class="subtitle is-6">Diffusion</h4>
+                    <video id="hardware-video-diffusion" controls style="width: 100%; max-width: 300px;">
+                      <source id="hardware-video-source-diffusion" src="" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
