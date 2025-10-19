@@ -81,21 +81,60 @@ $(document).ready(function() {
         const imageType = document.getElementById('image-type-select').value;
         const demoContent = document.getElementById('demo-content');
         
-        // Show the content area when selections are made
+        // Hide content if either dropdown is set to "None"
+        if (environment === '' || imageType === '') {
+            demoContent.style.display = 'none';
+            return;
+        }
+        
+        // Show the content area when both selections are made
         demoContent.style.display = 'flex';
         
         // Convert image type to filename format (lowercase, replace spaces with underscores)
         const imageTypeFilename = imageType.toLowerCase().replace(/\s+/g, '_');
         
+        // Use the environment name directly as the folder path
+        const folderPath = environment;
+        
         // Update video source
-        const videoSource = document.getElementById('video-source');
         const videoElement = document.getElementById('demo-video');
-        videoSource.src = `./static/scenes/scene_${environment}/videos/${imageTypeFilename}.mp4`;
+        const videoSource = document.getElementById('video-source');
+        // Use H.264 versions for all videos
+        const videoUrl = `./static/scenes/${folderPath}/videos/${imageTypeFilename}_h264.mp4`;
+        
+        // Clear existing sources
+        videoElement.innerHTML = '';
+        
+        // Create new source element
+        const source = document.createElement('source');
+        source.src = videoUrl;
+        source.type = 'video/mp4';
+        
+        // Add source to video element
+        videoElement.appendChild(source);
+        videoElement.appendChild(document.createTextNode('Your browser does not support the video tag.'));
+        
+        // Add error handling
+        videoElement.onerror = function(e) {
+            console.error('Video load error:', e);
+            console.error('Failed to load video:', videoUrl);
+            console.error('Video element error details:', videoElement.error);
+        };
+        
+        videoElement.onloadeddata = function() {
+            console.log('Video loaded successfully:', videoUrl);
+        };
+        
+        videoElement.oncanplay = function() {
+            console.log('Video can start playing:', videoUrl);
+        };
+        
+        // Load the video
         videoElement.load();
         
         // Update risk graph image
         const riskGraph = document.getElementById('risk-graph');
-        riskGraph.src = `./static/scenes/scene_${environment}/risk_graphs/${imageTypeFilename}.png`;
+        riskGraph.src = `./static/scenes/${folderPath}/risk_graphs/${imageTypeFilename}.png`;
         riskGraph.alt = `${imageType} Risk Graph for Environment ${environment}`;
     }
 
