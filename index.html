@@ -1,61 +1,215 @@
 <!DOCTYPE html>
+<!-- Build stamp: 2025-10-10T03:43:57.323026Z -->
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="description"
-        content="Bayesian Risk">
+  <meta name="description" content="Bayesian Risk">
   <meta name="keywords" content="Risk, Safety, Planning">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bayesian Risk</title>
+  <title>Semantic-Metric Bayesian Risk Fields: Learning Robot Safety from Human Videos with a VLM Prior</title>
 
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
-        rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
 
+  <!-- Bulma & site CSS (Nerfies-style) -->
   <link rel="stylesheet" href="./static/css/bulma.min.css">
   <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
   <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
-
   <link rel="icon" href="./static/images/favicon.svg">
+
+  <!-- Minimal styles: centered subnav, smooth scroll, tight spacing -->
+  <style>
+    html { scroll-behavior: smooth; }
+    .subnav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: white;
+      border-bottom: 1px solid #eee;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+    }
+    .subnav .subnav-link {
+      display: inline-block;
+      padding: 0.75rem 0.9rem;
+      font-weight: 600;
+      color: #4a4a4a;
+    }
+    .subnav .subnav-link:hover { color: #000; text-decoration: underline; }
+    :target::before {
+      content: "";
+      display: block;
+      height: 60px;
+      margin-top: -60px;
+      visibility: hidden;
+    }
+    /* Tight spacing */
+    .trial-row { margin-top: 0.15rem; margin-bottom: 0.15rem; }
+    .trial-title-below { margin-top: 0.2rem; margin-bottom: 0.2rem; }
+    #robot-controls { margin-bottom: 0.5rem; }
+    #batch-buttons .button { margin: 0.15rem 0.2rem; }
+    /* Tighter vertical spacing for Experiments video grid */
+    /* Experiments grid: aggressively tighten vertical spacing */
+    #experiment-videos-grid .columns.is-variable { --columnGap: 0.05rem; }
+    #experiment-videos-grid .column { padding-top: 0.05rem; padding-bottom: 0.05rem; }
+    #experiment-videos-grid figure.image { margin-bottom: 0; }
+    #experiment-videos-grid p { margin-top: 0.05rem; margin-bottom: 0; }
+    /* Experiments custom CSS grid: keep horizontal gap, shrink inter-row gap */
+    #experiment-videos-grid .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1rem; /* horizontal spacing */
+      row-gap: 0.00rem; /* tighter vertical spacing between rows */
+      align-items: start;
+    }
+    #experiment-videos-grid .exp-grid-item { display: flex; flex-direction: column; }
+    #experiment-videos-grid .exp-grid figure { margin: 0; padding: 0; }
+    #experiment-videos-grid video { width: 100%; height: auto; display: block; }
+    #experiment-videos-grid .exp-caption { margin: 0.15rem 0 0 0; padding: 0; text-align: center; font-size: 0.75rem; color: #7a7a7a; }
+    
+    /* Downstream Applications: custom grid for tight vertical spacing */
+    .value-learner-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 1.25rem;
+      row-gap: 0.75rem; /* vertical spacing between rows */
+      align-items: start;
+    }
+    .value-learner-grid > * { margin: 0; padding: 0; }
+    .value-learner-grid figure { margin: 0 !important; padding: 0; }
+    .value-learner-grid .vl-cell { margin: 0; padding: 0; }
+    .value-learner-grid video { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; }
+    /* Neutralize Bulma aspect box inside Value Learner so rows collapse tightly */
+    .value-learner-grid .image.is-16by9 { position: static; padding-top: 0.01rem !important; height: auto; }
+    .value-learner-grid .image.is-16by9 > video { position: static; }
+    
+    /* Robot Navigation: use default Bulma spacing (no overrides) */
+  </style>
+
+  <!-- JS -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js?v=20251019-1412"></script>
+  <script src="./static/js/index.js"></script>
+  <script>
+    // Experiments environment dynamic loader
+    (function() {
+      const envSelectId = 'experiment-environment-select';
+      const gridId = 'experiment-videos-grid';
+      const order = [
+        { key: 'rgb', label: 'RGB', file: 'rgb_h264.mp4' },
+        { key: 'prior', label: 'Prior', file: 'prior_h264.mp4' },
+        { key: 'likelihood', label: 'Likelihood', file: 'likelihood_h264.mp4' },
+        { key: 'posterior', label: 'Posterior', file: 'posterior_h264.mp4' }
+      ];
+
+      function buildExperimentGrid(envFolder) {
+        const grid = document.getElementById(gridId);
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        // If no environment selected, do not attempt to load videos
+        if (!envFolder) return;
+
+        const row = document.createElement('div');
+        row.className = 'exp-grid';
+
+        order.forEach(item => {
+          const col = document.createElement('div');
+          col.className = 'exp-grid-item';
+
+          const fig = document.createElement('figure');
+
+          const vid = document.createElement('video');
+          // Attributes for autoplay on most browsers
+          vid.setAttribute('autoplay', '');
+          vid.setAttribute('loop', '');
+          vid.setAttribute('muted', '');
+          vid.setAttribute('playsinline', '');
+          vid.setAttribute('controls', '');
+          // Preload video data so autoplay starts immediately
+          vid.setAttribute('preload', 'auto');
+          // Avoid requesting a non-existent poster
+          vid.src = `static/experiment_videos/${envFolder}/${item.file}`;
+          // Programmatically enforce autoplay-friendly properties
+          vid.muted = true;
+          vid.autoplay = true;
+          vid.playsInline = true;
+          vid.addEventListener('canplay', () => { vid.play().catch(()=>{}); });
+          
+          // Play RGB video at 3x speed
+          if (item.key === 'rgb') {
+            vid.playbackRate = 3.0;
+          }
+
+          fig.appendChild(vid);
+          col.appendChild(fig);
+
+          const cap = document.createElement('div');
+          cap.className = 'exp-caption';
+          cap.textContent = item.label;
+          col.appendChild(cap);
+
+          row.appendChild(col);
+        });
+
+        grid.appendChild(row);
+
+        // Ensure videos start immediately
+        grid.querySelectorAll('video').forEach(v => { try { v.play(); } catch(e) {} });
+
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            const v = entry.target;
+            if (entry.isIntersecting) { v.play().catch(()=>{}); } else { v.pause(); }
+          });
+        }, { threshold: 0.25 });
+        grid.querySelectorAll('video').forEach(v => io.observe(v));
+      }
+
+      function initExperimentLoader() {
+        const sel = document.getElementById(envSelectId);
+        if (!sel) return;
+        sel.addEventListener('change', () => buildExperimentGrid(sel.value));
+        // Auto-select first non-empty option if present
+        if (sel.value === '' && sel.options.length > 0) {
+          for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value) { sel.selectedIndex = i; break; }
+          }
+        }
+        buildExperimentGrid(sel.value);
+      }
+
+      document.addEventListener('DOMContentLoaded', initExperimentLoader);
+    })();
+  </script>
 </head>
 <body>
 
+<!-- Header / Hero -->
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <!-- <img src="./static/images/logo.svg"
-          alt="Logo" /> -->
-          <h1 class="title is-1 publication-title"> Bayesian Risk Quantification from Safe Human Demonstrations and Common Sense </h1>
+          <h1 class="title is-1 publication-title">Semantic-Metric Bayesian Risk Fields: Learning Robot Safety from Human Videos with a VLM Prior</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="">Anonymous</a><sup></sup>
+              <a href="">Anonymous</a>
             </span>
           </div>
-
           <div class="column has-text-centered">
             <div class="publication-links">
-              <!-- Code Link. -->
               <span class="link-block">
-                <a href="https://github.com/riskbayesian/bayesian_risk"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fab fa-github"></i>
-                  </span>
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
                   <span>Code</span>
-                  </a>
+                </a>
               </span>
             </div>
-
           </div>
         </div>
       </div>
@@ -63,177 +217,70 @@
   </div>
 </section>
 
-<!-- <section class="hero teaser">
+<!-- Sticky Subnav -->
+<nav class="subnav has-text-centered" role="navigation" aria-label="section navigation">
   <div class="container is-max-desktop">
-    <div class="hero-body">
-      <img src="./static/images/pipeline.png"
-               alt="Architecture."
-      />
-      <p class="has-text-justified"></p>
-      <span class="method">Bayesian Risk Pipeline</span>
-        Under construction
-    </div>
-  </div>
-</section> -->
-
-<!-- Demonstrations Section -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3 has-text-centered">Demonstrations</h2>
-        
-        <!-- Dropdown Controls -->
-        <div class="columns is-centered">
-          <div class="column is-narrow">
-            <div class="field">
-              <label class="label">Environment</label>
-              <div class="control">
-                <div class="select">
-                  <select id="environment-select">
-                    <option value="">Select Item</option>
-                    <option value="Table_Top_Laptop_Manipulated">Table Top Laptop Manipulated</option>
-                    <option value="Table_Top_Cup_Manipulated">Table Top Cup Manipulated</option>
-                    <option value="Workbench_Solo_Cup_Manipulated">Workbench Solo Cup Manipulated</option>
-                    <option value="Workspace_Solo_Cup_Manipulated">Workspace Cup Manipulated</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="column is-narrow">
-            <div class="field">
-              <label class="label">Image Type</label>
-              <div class="control">
-                <div class="select">
-                  <select id="image-type-select">
-                    <option value="">Select Item</option>
-                    <option value="Posterior">Posterior</option>
-                    <option value="Prior">Prior</option>
-                    <option value="Likelihood">Likelihood</option>
-                    <option value="Reasoning">Reasoning</option>
-                    <!-- <option value="Object ID">Object ID</option> -->
-                    <option value="RGB">RGB</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Video and Graph Display -->
-        <div class="columns is-centered" id="demo-content" style="margin-top: 2rem; display: none;">
-          <div class="column is-half">
-            <div class="box has-text-centered">
-              <h3 class="subtitle is-5">Video</h3>
-              <video id="demo-video" controls style="width: 100%; max-width: 500px;">
-                <source id="video-source" src="" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          </div>
-          <div class="column is-half">
-            <div class="box has-text-centered">
-              <h3 class="subtitle is-5">Risk Graph</h3>
-              <img id="risk-graph" src="" alt="Risk Graph" style="width: 100%; max-width: 500px;">
-            </div>
-          </div>
-        </div>
+    <div class="columns is-mobile is-vcentered">
+      <div class="column has-text-centered">
+        <a class="subnav-link" href="#abstract">Abstract</a>
+        <a class="subnav-link" href="#method-overview">Method Overview</a>
+        <a class="subnav-link" href="#experiments">Experiments</a>
+        <a class="subnav-link" href="#downstream-applications">Downstream Applications</a>
       </div>
     </div>
   </div>
-</section>
+</nav>
 
-<section class="section">
+<!-- Abstract -->
+<section class="section" id="abstract">
   <div class="container is-max-desktop">
-    <!-- Abstract. -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
-          <p>
-            Humans interpret safety not as a binary signal but as a continuous, context- and spatially-dependent notion of risk. While risk is subjective, humans form rational mental models that guide action selection in dynamic environments (i.e. if A is riskier than B, and B is riskier than C, then A is riskier than C). The objective of this work is to extract the implicit risk model by introducing a novel, semantically-conditioned and spatially-varying parametrization of risk, supervised directly from only safe human demonstration videos and common sense. First, we define risk through a Bayesian formulation. Next, our framework integrates semantic scene understanding, using pretrained vision-language models (e.g., DINOv3), to map feature images to risk images. Moreover, due to the common sense reasoning present in large language models, LLMs can be used to both enact broad rulesets about risk in the form of a prior and distill reasoning capabilities into our framework. Our pipeline produces pixel-dense risk images that can then be used as value-predictors in planning tasks or be projected into 3D for use in conventional trajectory optimization to produce human-like motion. This learned mapping enables generalization to novel objects and contexts, with the potential to scale training to large datasets. In particular, the Bayesian framework that is introduced enables adaptation of our model to additional observations or common sense rules. We demonstrate that our proposed framework produces contextual risk that is aligned with human preferences. Additionally, we illustrate several enticing downstream applications of the model, such as using it to effectively reduce risk in image-based planning tasks in-the-wild or in conjunction with classical trajectory optimization algorithms. Our results suggest that the proposed method is a leap toward enabling autonomous systems to internalize human-like risk reasoning.
-          </p>
+          <p>Humans interpret safety not as a binary signal but as a continuous, context- and spatially-dependent notion of risk. We extract an implicit human risk model by introducing a semantically conditioned and spatially varying Bayesian risk field supervised directly from safe human demonstration videos and VLM common sense. The prior is furnished by a pretrained vision-language model, and the likelihood is a learned ViT that maps pretrained features (e.g., DINOv3) to pixel-aligned risk values. Our pipeline produces pixel-dense risk images usable as value predictors for robot planning or as 3D fields for trajectory optimization, enabling generalization to novel objects and contexts and scaling to larger datasets. The Bayesian formulation supports adaptation to additional observations or common-sense rules. We show that the resulting risk aligns with human preferences and supports downstream applications, including visuomotor value shaping and classical trajectory optimization, taking a step toward robots with human-like risk reasoning.</p>
         </div>
       </div>
     </div>
-    <!--/ Abstract. -->
   </div>
 </section>
 
-
-<!-- Hardware -->
-<section class="section">
-   <!-- Open Loop -->
+<!-- Method Overview -->
+<section class="section" id="method-overview">
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Hardware Experiments</h2>
-        
-        <!-- Hardware Video Dropdown -->
-        <div class="columns is-centered">
-          <div class="column is-narrow">
-            <div class="field">
-              <label class="label">Hardware Video</label>
-              <div class="control">
-                <div class="select">
-                  <select id="hardware-video-select">
-                    <option value="">None</option>
-                  </select>
-                </div>
-              </div>
+        <h2 class="title is-3 has-text-centered">Method Overview</h2>
+
+        <!-- Likelihood subsection -->
+        <h3 class="title is-4">Likelihood</h3>
+        <div class="columns is-variable is-3">
+          <div class="column is-6 has-text-centered">
+            <img src="./static/images/likelihood.png" alt="Likelihood diagram" style="max-width:100%; height:auto;" />
+            <!--<p class="is-size-6 has-text-grey">Figure: Likelihood diagram (placeholder)</p>-->
+            <img src="./static/images/likelihood_detail.png" alt="" style="max-width:100%; height:auto; margin-top:0.5rem;" />
+            <!--<p class="is-size-6 has-text-grey">Figure: Likelihood details (placeholder)</p>-->
+          </div>
+          <div class="column is-6">
+            <div class="content" style="margin-top:0;">
+              <p>We learn a distance-conditioned likelihood from safe human demonstrations. RGB-D tabletop videos are segmented and tracked (YOLOv8 + SAM2 + HoistFormer), inter-object distances are aggregated into per-trajectory histograms, and discrete CDFs supervise a transformer that maps DINOv3 features of the manipulated and reference objects to Bézier control points of the CDF. The model is permutation-invariant across object pair samples and yields pixel-aligned, distance-aware risk tendencies from actions that humans naturally avoid or approach.</p>
             </div>
           </div>
         </div>
+        <hr/>
 
-        <!-- Hardware Video Display -->
-        <div class="columns is-centered" id="hardware-content" style="margin-top: 2rem; display: none;">
-          <div class="column is-full-width">
-            <div class="box has-text-centered">
-              <h3 class="subtitle is-5">Hardware Experiment Videos</h3>
-              
-              <!-- 2x2 Grid Layout -->
-              <div class="columns is-multiline">
-                <!-- Top Row -->
-                <div class="column is-half">
-                  <div class="has-text-centered">
-                    <h4 class="subtitle is-6">Ours</h4>
-                    <video id="hardware-video-ours" controls style="width: 100%; max-width: 300px;">
-                      <source id="hardware-video-source-ours" src="" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                </div>
-                <div class="column is-half">
-                  <div class="has-text-centered">
-                    <h4 class="subtitle is-6">VLA</h4>
-                    <video id="hardware-video-vla" controls style="width: 100%; max-width: 300px;">
-                      <source id="hardware-video-source-vla" src="" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                </div>
-                
-                <!-- Bottom Row -->
-                <div class="column is-half">
-                  <div class="has-text-centered">
-                    <h4 class="subtitle is-6">Human</h4>
-                    <video id="hardware-video-human" controls style="width: 100%; max-width: 300px;">
-                      <source id="hardware-video-source-human" src="" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                </div>
-                <div class="column is-half">
-                  <div class="has-text-centered">
-                    <h4 class="subtitle is-6">Diffusion</h4>
-                    <video id="hardware-video-diffusion" controls style="width: 100%; max-width: 300px;">
-                      <source id="hardware-video-source-diffusion" src="" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                </div>
-              </div>
+        <!-- Prior subsection -->
+        <h3 class="title is-4">Prior</h3>
+        <div class="columns is-variable is-3">
+          <div class="column is-6 has-text-centered">
+            <img src="./static/images/prior.png" alt="Prior diagram" style="max-width:100%; height:auto;" />
+            <!--<p class="is-size-6 has-text-grey">Figure: Prior diagram (placeholder)</p>-->
+            <img src="./static/images/prior_rules.png" alt="" style="max-width:100%; height:auto; margin-top:0.5rem;" />
+            <!--<p class="is-size-6 has-text-grey">Figure: Prior rules/ablation (placeholder)</p>-->  
+          </div>
+          <div class="column is-6">
+            <div class="content" style="margin-top:0;">
+              <p>We build a semantics-driven prior using an LLM-assisted object-pair risk table. An LLM enumerates household objects by room and rates every pair’s proximity risk (1–5) with rationales (e.g., electrocution, fire, sharpness, fragility, water damage). Images per object are embedded with DINOv3 to form an object lookup; pixel features vote for the nearest object IDs, which query a pairwise risk LUT to yield object-aware priors. The prior is interpretable, scalable via LLM data generation, and adapts to task-specific rulesets.</p>
             </div>
           </div>
         </div>
@@ -242,22 +289,282 @@
   </div>
 </section>
 
+<!-- Experiments -->
+<section class="section" id="experiments">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Experiments</h2>
+        <p class="content">We evaluate the pixel-wise risk fields and their posterior combination. Qualitatively, prior and likelihood compose into posterior risk that depends on the manipulated object and discounts far-away hazards. As a value signal, the posterior ranks options (e.g., shelving choices) by predicted risk. Quantitatively, trajectories generated by a classical optimizer around 3D risk buffers are judged more risk-aware than state-of-the-art learned policies in tabletop tasks, while remaining competitive in human-trajectory similarity.</p>
+
+        <!-- Environment selector -->
+        <div class="field is-grouped is-grouped-centered" id="experiment-env-control" style="margin-bottom:0.25rem;">
+          <div class="control">
+            <label class="label" for="experiment-environment-select" style="margin-right:0.5rem; margin-bottom:0;">Environment</label>
+          </div>
+          <div class="control">
+            <div class="select is-small">
+              <select id="experiment-environment-select" aria-label="Select environment">
+                <option value="" selected>Select Environment</option>
+                <option value="Table_Top_Cup_Manipulated">Table Top Cup Manipulated</option>
+                <option value="Table_Top_Laptop_Manipulated">Table Top Laptop Manipulated</option>
+                <option value="Workbench_Solo_Cup_Manipulated">Workbench Solo Cup Manipulated</option>
+                <option value="Workspace_Solo_Cup_Manipulated">Workspace Solo Cup Manipulated</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Turbo colormap -->
+        <div style="margin-bottom:0.5rem;">
+          <p style="font-size:0.875rem; color:#4a4a4a; margin-bottom:0.25rem; text-align:left;">The Turbo colormap is used to denote risk, with blue being safe to red being higest risk.</p>
+          <div class="has-text-centered">
+            <img src="./static/images/turbo_cmap.png" alt="Turbo colormap" style="max-width:600px; width:100%; height:auto; display:inline-block;" />
+          </div>
+        </div>
+
+        <!-- Dynamic experiment videos grid -->
+        <div id="experiment-videos-grid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Downstream Applications -->
+<section class="section" id="downstream-applications">
+  <div class="container is-max-fullhd">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+
+        <h2 class="title is-3 has-text-centered">Downstream Applications</h2>
+
+        <!-- Risk-aware Value Learner -->
+        <h3 class="title is-4">Risk-aware Value Learner</h3>
+        <p class="content">Posterior risk maps act as value functions for visuomotor decision-making: streaming risk over candidate rollouts enables selecting lower-risk behaviors (e.g., choosing the safest shelf for placing a cup among alternatives that contain electronics). <br>
+          Note that the videos may be out of sync with each other after scrolling so beware. 
+        </p>
+
+        <!-- Turbo colormap (Downstream Applications) -->
+        <div style="margin-bottom:0.5rem;">
+          <p style="font-size:0.875rem; color:#4a4a4a; margin-bottom:0.25rem; text-align:left;">The Turbo colormap is used to denote risk for the Posterior Risk Map, with blue being safe to red being highest risk.</p>
+          <div class="has-text-centered">
+            <img src="./static/images/turbo_cmap.png" alt="Turbo colormap" style="max-width:600px; width:100%; height:auto; display:inline-block;" />
+          </div>
+        </div>
+
+        <!-- Column headers -->
+        <div class="columns is-mobile" style="margin-bottom:0.25rem;">
+          <div class="column is-one-third has-text-centered">
+            <p class="has-text-weight-semibold" style="font-size:0.9rem;">RGB</p>
+          </div>
+          <div class="column is-one-third has-text-centered">
+            <p class="has-text-weight-semibold" style="font-size:0.9rem;">Posterior</p>
+          </div>
+          <div class="column is-one-third has-text-centered">
+            <p class="has-text-weight-semibold" style="font-size:0.9rem;">Risk Graph</p>
+          </div>
+        </div>
+
+        <!-- 4x3 video grid -->
+        <div class="value-learner-grid">
+          <!-- Row 1 -->
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_1/shelf_1_rgb.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png" class="value-rgb-video"></video>
+            </figure>
+          </div>
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_1/shelf_1_cup_posterior_colored.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png"></video>
+            </figure>
+          </div>
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_1/shelf_1_cup_posterior_colored_risk_plot_h264.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png"></video>
+            </figure>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_2/shelf_2_rgb.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png" class="value-rgb-video"></video>
+            </figure>
+          </div>
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_2/shelf_2_cup_posterior_colored.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png"></video>
+            </figure>
+          </div>
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_2/shelf_2_cup_posterior_colored_risk_plot_h264.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png"></video>
+            </figure>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_3/shelf_3_rgb.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png" class="value-rgb-video"></video>
+            </figure>
+          </div>
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_3/shelf_3_cup_posterior_colored.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png"></video>
+            </figure>
+          </div>
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_3/shelf_3_cup_posterior_colored_risk_plot_h264.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png"></video>
+            </figure>
+          </div>
+
+          <!-- Row 4 -->
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_4/shelf_4_rgb.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png" class="value-rgb-video"></video>
+            </figure>
+          </div>
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_4/shelf_4_cup_posterior_colored.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png"></video>
+            </figure>
+          </div>
+          <div class="vl-cell">
+            <figure class="image is-16by9">
+            <video autoplay loop muted playsinline controls src="static/risk_aware_value_learner/shelf_4/shelf_4_cup_posterior_colored_risk_plot_h264.mp4" style="width:100%;height:100%;" poster="./static/images/video_placeholder.png"></video>
+            </figure>
+          </div>
+        </div>
+
+        <hr/>
+
+        <!-- Risk-aware Robot Navigation -->
+        <h3 class="title is-4">Risk-aware Robot Navigation</h3>
+        <p class="content">
+          We convert posterior viability thresholds to buffer radii around depth point clouds and plan with a classical optimizer that avoids these unions of balls. Across 33 experiments (trials 6–33 with all methods), human raters prefer our risk-aware trajectories more often than GR00T (VLA) and Diffusion Policy, while achieving competitive similarity to tele-operated references (DTW).
+        </p>
+
+        <!-- Buttons and single-trial viewer -->
+        <div class="box" id="robot-controls" style="margin-top:0.5rem;">
+          <div class="columns is-vcentered is-multiline">
+            <div class="column is-12 has-text-centered">
+              <span class="mr-2"><strong>Trial ID:</strong></span>
+              <div class="buttons is-centered is-small" id="batch-buttons">
+                <button class="button is-light batch-btn" data-idx="1">1</button><button class="button is-light batch-btn" data-idx="2">2</button><button class="button is-light batch-btn" data-idx="3">3</button><button class="button is-light batch-btn" data-idx="4">4</button><button class="button is-light batch-btn" data-idx="5">5</button><button class="button is-light batch-btn" data-idx="6">6</button><button class="button is-light batch-btn" data-idx="7">7</button><button class="button is-light batch-btn" data-idx="8">8</button><button class="button is-light batch-btn" data-idx="9">9</button><button class="button is-light batch-btn" data-idx="10">10</button><button class="button is-light batch-btn" data-idx="11">11</button><button class="button is-light batch-btn" data-idx="12">12</button><button class="button is-light batch-btn" data-idx="13">13</button><button class="button is-light batch-btn" data-idx="14">14</button><button class="button is-light batch-btn" data-idx="15">15</button><button class="button is-light batch-btn" data-idx="16">16</button><button class="button is-light batch-btn" data-idx="17">17</button><button class="button is-light batch-btn" data-idx="18">18</button><button class="button is-light batch-btn" data-idx="19">19</button><button class="button is-light batch-btn" data-idx="20">20</button><button class="button is-light batch-btn" data-idx="21">21</button><button class="button is-light batch-btn" data-idx="22">22</button><button class="button is-light batch-btn" data-idx="23">23</button><button class="button is-light batch-btn" data-idx="24">24</button><button class="button is-light batch-btn" data-idx="25">25</button><button class="button is-light batch-btn" data-idx="26">26</button><button class="button is-light batch-btn" data-idx="27">27</button><button class="button is-light batch-btn" data-idx="28">28</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single-trial container -->
+        <div id="robot-navigation-grid"></div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
 <footer class="footer">
   <div class="container">
     <div class="columns is-centered">
       <div class="column is-8">
         <div class="content">
           <p>
-            This website is licensed under a <a rel="license"
-                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>. This webpage template is from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
-            We sincerely thank <a href="https://keunhong.com/">Keunhong Park</a> for developing and open-sourcing this template.
+            This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            This webpage template is inspired by the <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> project.
           </p>
         </div>
       </div>
     </div>
   </div>
 </footer>
+
+<!-- Robot Navigation single-trial script -->
+<script>
+(function() {
+  const methods = ['human', 'vla', 'diffusion', 'risk'];
+  const methodLabels = {
+    'human': 'Tele-operated',
+    'vla': 'GR00T',
+    'diffusion': 'Diffusion Policy',
+    'risk': 'Risk (Ours)'
+  };
+  const grid = document.getElementById('robot-navigation-grid');
+  const buttons = document.querySelectorAll('#batch-buttons .batch-btn');
+
+  function trialIdFromIndex(idx) {
+    const i = parseInt(idx, 10);
+    return i + 5; // 1->6, ..., 28->33
+  }
+
+  function buildTrialByIndex(idx) {
+    const trialId = trialIdFromIndex(idx);
+    grid.innerHTML = '';
+
+    const row = document.createElement('div');
+        row.className = 'columns is-multiline is-variable is-1 trial-row';
+
+    methods.forEach((method) => {
+          const col = document.createElement('div');
+          col.className = 'column is-one-quarter';
+
+      const fig = document.createElement('figure');
+      fig.className = 'image is-16by9';
+
+      const vid = document.createElement('video');
+      vid.setAttribute('autoplay', '');
+      vid.setAttribute('loop', '');
+      vid.setAttribute('muted', '');
+      vid.setAttribute('playsinline', '');
+      vid.setAttribute('controls', '');
+      vid.setAttribute('preload', 'metadata');
+      vid.setAttribute('poster', './static/images/video_placeholder.png');
+      vid.src = `static/robot_videos/720p_${trialId}_${method}_sanitized.mp4`;
+
+      fig.appendChild(vid);
+      col.appendChild(fig);
+
+      const cap = document.createElement('p');
+      cap.className = 'has-text-centered is-size-7 has-text-grey';
+      cap.textContent = methodLabels[method] || method;
+      col.appendChild(cap);
+
+      row.appendChild(col);
+    });
+
+        grid.appendChild(row);
+const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const v = entry.target;
+        if (entry.isIntersecting) { v.play().catch(()=>{}); } else { v.pause(); }
+      });
+    }, { threshold: 0.25 });
+    grid.querySelectorAll('video').forEach(v => io.observe(v));
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('is-primary'));
+      btn.classList.add('is-primary');
+      buildTrialByIndex(btn.dataset.idx);
+    });
+  });
+
+  const first = document.querySelector('#batch-buttons .batch-btn[data-idx="1"]');
+  if (first) { first.classList.add('is-primary'); buildTrialByIndex(1); }
+})();
+</script>
+
+<!-- Speed up RGB videos in Value Learner section -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const rgbVideos = document.querySelectorAll('.value-rgb-video');
+  rgbVideos.forEach(v => {
+    v.playbackRate = 3.0;
+  });
+});
+</script>
 
 </body>
 </html>
