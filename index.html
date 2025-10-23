@@ -185,6 +185,190 @@
 
       document.addEventListener('DOMContentLoaded', initExperimentLoader);
     })();
+
+    // Prior Reasoning environment dynamic loader
+    (function() {
+      const envSelectId = 'prior-reasoning-environment-select';
+      const gridId = 'prior-reasoning-videos-grid';
+      const order = [
+        { key: 'rgb', label: 'RGB', file: 'rgb_h264.mp4' },
+        { key: 'prior', label: 'Prior', file: 'prior_h264.mp4' },
+        { key: 'prior_reasoning', label: 'Prior Reasoning', file: 'reasoning_h264.mp4' }
+      ];
+
+      function buildPriorReasoningGrid(envFolder) {
+        const grid = document.getElementById(gridId);
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        // If no environment selected, do not attempt to load videos
+        if (!envFolder) return;
+
+        // Create main container with two columns
+        const mainRow = document.createElement('div');
+        mainRow.className = 'columns is-variable is-3';
+
+        // Left column - Videos (vertical layout)
+        const leftCol = document.createElement('div');
+        leftCol.className = 'column is-6';
+
+        order.forEach(item => {
+          // Video container
+          const videoDiv = document.createElement('div');
+          videoDiv.style.marginBottom = '0.25rem';
+          videoDiv.style.padding = '0';
+          videoDiv.style.width = '400px'; // Fixed width instead of full column
+          videoDiv.style.margin = '0 auto 0.25rem auto'; // Center the video
+
+          const fig = document.createElement('figure');
+          fig.style.margin = '0';
+          fig.style.padding = '0';
+          fig.style.position = 'relative';
+          fig.style.paddingTop = '56.25%'; // Standard 16:9 aspect ratio
+          fig.style.height = '0';
+          fig.style.overflow = 'hidden';
+
+          const vid = document.createElement('video');
+          // Attributes for autoplay on most browsers
+          vid.setAttribute('autoplay', '');
+          vid.setAttribute('loop', '');
+          vid.setAttribute('muted', '');
+          vid.setAttribute('playsinline', '');
+          vid.setAttribute('controls', '');
+          vid.setAttribute('preload', 'auto');
+          vid.setAttribute('poster', './static/images/video_placeholder.png');
+          vid.src = `static/reasoning/${envFolder}/videos/${item.file}`;
+          vid.style.position = 'absolute';
+          vid.style.top = '0';
+          vid.style.left = '0';
+          vid.style.width = '100%';
+          vid.style.height = '100%';
+          vid.style.objectFit = 'cover';
+          
+          // Programmatically enforce autoplay-friendly properties
+          vid.muted = true;
+          vid.autoplay = true;
+          vid.playsInline = true;
+          vid.addEventListener('canplay', () => { vid.play().catch(()=>{}); });
+          
+          // Play RGB video at 3x speed
+          if (item.key === 'rgb') {
+            vid.className = 'prior-rgb-video';
+            vid.playbackRate = 3.0;
+          }
+
+          fig.appendChild(vid);
+          videoDiv.appendChild(fig);
+          leftCol.appendChild(videoDiv);
+
+          // Video label (after video)
+          const labelDiv = document.createElement('div');
+          labelDiv.style.textAlign = 'center';
+          labelDiv.style.marginBottom = '0.25rem';
+          
+          const label = document.createElement('p');
+          label.style.fontWeight = '600';
+          label.style.fontSize = '0.9rem';
+          label.style.marginTop = '0.15rem';
+          label.style.marginBottom = '0';
+          label.style.padding = '0';
+          label.textContent = item.label;
+          
+          labelDiv.appendChild(label);
+          leftCol.appendChild(labelDiv);
+        });
+
+        // Right column - Images
+        const rightCol = document.createElement('div');
+        rightCol.className = 'column is-6';
+
+        // Turbo colormap
+        const turboDiv = document.createElement('div');
+        turboDiv.className = 'has-text-centered';
+        turboDiv.style.marginBottom = '1rem';
+        
+        const turboLabel = document.createElement('p');
+        turboLabel.className = 'has-text-weight-semibold';
+        turboLabel.style.fontSize = '0.9rem';
+        turboLabel.style.marginBottom = '0.5rem';
+        turboLabel.textContent = 'Prior Risk Colormap';
+        
+        const turboImg = document.createElement('img');
+        turboImg.src = './static/images/turbo_cmap.png';
+        turboImg.alt = 'Turbo colormap';
+        turboImg.style.maxWidth = '100%';
+        turboImg.style.height = 'auto';
+        turboImg.style.display = 'inline-block';
+        
+        turboDiv.appendChild(turboLabel);
+        turboDiv.appendChild(turboImg);
+        rightCol.appendChild(turboDiv);
+
+        // Prior Reasoning image
+        const reasoningDiv = document.createElement('div');
+        reasoningDiv.className = 'has-text-centered';
+        
+        const reasoningLabel = document.createElement('p');
+        reasoningLabel.className = 'has-text-weight-semibold';
+        reasoningLabel.style.fontSize = '0.9rem';
+        reasoningLabel.style.marginBottom = '0.5rem';
+        reasoningLabel.textContent = 'Prior Risk Colormap';
+        
+        const reasoningImgContainer = document.createElement('div');
+        reasoningImgContainer.style.position = 'relative';
+        reasoningImgContainer.style.display = 'inline-block';
+        
+        const reasoningImg = document.createElement('img');
+        reasoningImg.src = 'static/reasoning/colorbar.png';
+        reasoningImg.alt = 'Prior Reasoning diagram';
+        reasoningImg.style.maxWidth = '100%';
+        reasoningImg.style.height = 'auto';
+        reasoningImg.style.cursor = 'pointer';
+        reasoningImg.onclick = function() { openImageModal(this); };
+        
+        const expandIcon = document.createElement('div');
+        expandIcon.style.cssText = 'position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.7); color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer;';
+        expandIcon.onclick = function() { openImageModal(reasoningImg); };
+        expandIcon.innerHTML = '<i class="fas fa-expand"></i>';
+        
+        reasoningImgContainer.appendChild(reasoningImg);
+        reasoningImgContainer.appendChild(expandIcon);
+        
+        reasoningDiv.appendChild(reasoningLabel);
+        reasoningDiv.appendChild(reasoningImgContainer);
+        rightCol.appendChild(reasoningDiv);
+
+        mainRow.appendChild(leftCol);
+        mainRow.appendChild(rightCol);
+        grid.appendChild(mainRow);
+
+        // Ensure videos start immediately
+        grid.querySelectorAll('video').forEach(v => { try { v.play(); } catch(e) {} });
+
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            const v = entry.target;
+            if (entry.isIntersecting) { v.play().catch(()=>{}); } else { v.pause(); }
+          });
+        }, { threshold: 0.25 });
+        grid.querySelectorAll('video').forEach(v => io.observe(v));
+      }
+
+      function initPriorReasoningLoader() {
+        const sel = document.getElementById(envSelectId);
+        if (!sel) return;
+        sel.addEventListener('change', () => buildPriorReasoningGrid(sel.value));
+        // Auto-select first non-empty option if present
+        if (sel.value === '' && sel.options.length > 0) {
+          for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value) { sel.selectedIndex = i; break; }
+          }
+        }
+        buildPriorReasoningGrid(sel.value);
+      }
+
+      document.addEventListener('DOMContentLoaded', initPriorReasoningLoader);
+    })();
   </script>
 </head>
 <body>
@@ -442,6 +626,34 @@
 
         <hr/>
 
+        <!-- Prior Reasoning -->
+        <h3 class="title is-4">Prior Reasoning</h3>
+        <p class="content">This section demonstrates how the prior component of our Bayesian risk field provides semantic reasoning about object interactions. The prior encodes common-sense knowledge about which objects pose risks when in proximity to each other.</p>
+
+        <!-- Environment selector -->
+        <div class="field is-grouped is-grouped-centered" id="prior-reasoning-env-control" style="margin-bottom:0.2rem;">
+          <div class="control">
+            <label class="label" for="prior-reasoning-environment-select" style="margin-right:0.5rem; margin-bottom:0;">Environment</label>
+          </div>
+          <div class="control">
+            <div class="select is-small">
+              <select id="prior-reasoning-environment-select" aria-label="Select environment">
+                <option value="">Select Environment</option>
+                <option value="Table_Top_Cup_Manipulated" selected>Table Top Cup Manipulated</option>
+                <option value="Table_Top_Laptop_Manipulated">Table Top Laptop Manipulated</option>
+                <option value="Workbench_Solo_Cup_Manipulated">Workbench Solo Cup Manipulated</option>
+                <option value="Workspace_Solo_Cup_Manipulated">Workspace Solo Cup Manipulated</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <hr style="border-top: 1px solid #ddd; margin: 2rem 0;">
+
+        <!-- Dynamic prior reasoning videos grid -->
+        <div id="prior-reasoning-videos-grid"></div>
+
+        <hr style="border-top: 1px solid #ddd; margin: 2rem 0;">
+
         <!-- Risk-aware Robot Navigation -->
         <h3 class="title is-4" id="risk-aware-robot-navigation">Risk-aware Robot Navigation</h3>
         <p class="content">
@@ -560,14 +772,66 @@ const io = new IntersectionObserver(entries => {
 })();
 </script>
 
-<!-- Speed up RGB videos in Value Learner section -->
+<!-- Speed up RGB videos in Value Learner and Prior Reasoning sections -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const rgbVideos = document.querySelectorAll('.value-rgb-video');
+  const rgbVideos = document.querySelectorAll('.value-rgb-video, .prior-rgb-video');
   rgbVideos.forEach(v => {
     v.playbackRate = 3.0;
   });
 });
+
+// Image modal functionality
+function openImageModal(img) {
+  // Create modal overlay
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  `;
+  
+  // Create expanded image
+  const expandedImg = document.createElement('img');
+  expandedImg.src = img.src;
+  expandedImg.alt = img.alt;
+  expandedImg.style.cssText = `
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    cursor: default;
+  `;
+  
+  // Prevent event bubbling on image click
+  expandedImg.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+  
+  // Close modal when clicking overlay
+  modal.addEventListener('click', function() {
+    document.body.removeChild(modal);
+  });
+  
+  // Close modal with Escape key
+  const handleKeyPress = function(e) {
+    if (e.key === 'Escape') {
+      document.body.removeChild(modal);
+      document.removeEventListener('keydown', handleKeyPress);
+    }
+  };
+  document.addEventListener('keydown', handleKeyPress);
+  
+  modal.appendChild(expandedImg);
+  document.body.appendChild(modal);
+}
 </script>
 
 </body>
