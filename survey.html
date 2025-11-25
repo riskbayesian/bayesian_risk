@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Bayesian Risk Survey">
+  <meta name="keywords" content="Risk, Safety, Planning, Survey">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Survey - Semantic-Metric Bayesian Risk Fields</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <!-- Bulma & site CSS (Nerfies-style) -->
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <style>
+    html { scroll-behavior: smooth; }
+    .survey-container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .main-content-layout {
+      display: flex;
+      gap: 2rem;
+      align-items: stretch;
+    }
+    .left-column {
+      flex: 0 0 45%;
+      min-width: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+    .right-column {
+      flex: 1;
+      min-width: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+    .video-grid-container {
+      background: #f5f5f5;
+      padding: 2rem;
+      border-radius: 8px;
+      position: sticky;
+      top: 2rem;
+      display: flex;
+      flex-direction: column;
+      height: fit-content;
+    }
+    .trial-info {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .video-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .video-wrapper {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 aspect ratio */
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .video-wrapper video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .video-wrapper.placeholder {
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .video-wrapper.placeholder::after {
+      content: 'N/A';
+      position: absolute;
+      color: #999;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .video-label {
+      margin-top: 0.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #363636;
+    }
+    .navigation-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+    .progress-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #363636;
+    }
+    .google-form-section {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .google-form-section .content {
+      margin-bottom: 0.5rem;
+    }
+    .google-form-section .content p {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .google-form-container {
+      margin-top: 0.75rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .google-form-container iframe {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+    }
+
+    /* Responsive design for smaller screens */
+    @media screen and (max-width: 1200px) {
+      .main-content-layout {
+        flex-direction: column;
+      }
+      .left-column, .right-column {
+        flex: 1;
+        min-width: 100%;
+      }
+      .video-grid-container {
+        position: static;
+      }
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">User Study Survey</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              Semantic-Metric Bayesian Risk Fields
+            </span>
+          </div>
+          <div class="column has-text-centered" style="margin-top: 1rem;">
+            <a href="index.html" class="button is-light is-rounded">
+              <span class="icon"><i class="fas fa-arrow-left"></i></span>
+              <span>Back to Main Page</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Survey Instructions -->
+<section class="section">
+  <div class="survey-container">
+    <div class="content has-text-centered">
+      <h2 class="title is-3">Survey Instructions</h2>
+      <p>Please watch the robot navigation videos on the left and answer the questions in the survey form on the right. For each trial, all four methods are shown for comparison.</p>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="main-content-layout">
+
+      <!-- Left Column - Videos -->
+      <div class="left-column">
+        <div class="video-grid-container">
+          <div class="video-grid" id="video-grid">
+            <!-- Videos will be dynamically inserted here -->
+          </div>
+
+          <div class="navigation-controls">
+            <button id="prev-btn" class="button is-medium is-primary">
+              <span class="icon"><i class="fas fa-chevron-left"></i></span>
+              <span>Prev</span>
+            </button>
+
+            <div class="progress-text">
+              <span id="current-trial">1</span> / <span id="total-trials">28</span>
+            </div>
+
+            <button id="next-btn" class="button is-medium is-primary">
+              <span>Next</span>
+              <span class="icon"><i class="fas fa-chevron-right"></i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Google Form -->
+      <div class="right-column">
+        <div class="google-form-section">
+          <div class="google-form-container">
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSe1uzHzaR4UPeF6xkgQAIHa7WipMLNQJlcdQ2cb3lT0moeD3Q/viewform?embedded=true"
+              frameborder="0"
+              marginheight="0"
+              marginwidth="0">
+              Loading…
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  // Video configuration
+  const methods = ['human', 'vla', 'diffusion', 'risk'];
+  const methodLabels = {
+    'human': 'Tele-operated',
+    'vla': 'GR00T',
+    'diffusion': 'Diffusion Policy',
+    'risk': 'Risk (Ours)'
+  };
+
+  // Predetermined shuffle order for trials 1-28
+  // This array maps display order (index 0-27) to trial numbers (1-28)
+  // To access from outside this scope, use: window.TRIAL_SHUFFLE_ORDER
+  const TRIAL_SHUFFLE_ORDER = [
+    14, 7, 22, 3, 19, 11, 26, 8, 15, 2,
+    24, 17, 5, 28, 12, 20, 9, 4, 25, 16,
+    1, 13, 6, 21, 10, 27, 18, 23
+  ];
+
+  // Predetermined shuffle order for methods (videos within each trial)
+  // Nested array: METHOD_SHUFFLE_ORDER[trialIndex] gives the shuffle for that trial
+  // Each inner array contains indices 0-3 corresponding to methods array:
+  // 0='human', 1='vla', 2='diffusion', 3='risk'
+  // Example: METHOD_SHUFFLE_ORDER[0] = [2, 0, 3, 1] means for trial 1:
+  //   Position 0 (top-left) shows 'diffusion'
+  //   Position 1 (top-right) shows 'human'
+  //   Position 2 (bottom-left) shows 'risk'
+  //   Position 3 (bottom-right) shows 'vla'
+  const METHOD_SHUFFLE_ORDER = [
+    [2, 0, 3, 1],  // Trial 1
+    [1, 3, 0, 2],  // Trial 2
+    [3, 2, 1, 0],  // Trial 3
+    [0, 1, 2, 3],  // Trial 4
+    [2, 3, 0, 1],  // Trial 5
+    [1, 0, 3, 2],  // Trial 6
+    [3, 1, 2, 0],  // Trial 7
+    [0, 2, 1, 3],  // Trial 8
+    [1, 2, 3, 0],  // Trial 9
+    [3, 0, 2, 1],  // Trial 10
+    [2, 1, 0, 3],  // Trial 11
+    [0, 3, 1, 2],  // Trial 12
+    [1, 3, 2, 0],  // Trial 13
+    [3, 0, 1, 2],  // Trial 14
+    [2, 1, 3, 0],  // Trial 15
+    [0, 2, 3, 1],  // Trial 16
+    [3, 2, 0, 1],  // Trial 17
+    [1, 0, 2, 3],  // Trial 18
+    [2, 3, 1, 0],  // Trial 19
+    [0, 1, 3, 2],  // Trial 20
+    [3, 1, 0, 2],  // Trial 21
+    [1, 2, 0, 3],  // Trial 22
+    [2, 0, 1, 3],  // Trial 23
+    [0, 3, 2, 1],  // Trial 24
+    [1, 3, 0, 2],  // Trial 25
+    [3, 2, 1, 0],  // Trial 26
+    [2, 0, 3, 1],  // Trial 27
+    [0, 1, 2, 3]   // Trial 28
+  ];
+
+  // Export to global scope for use elsewhere
+  window.TRIAL_SHUFFLE_ORDER = TRIAL_SHUFFLE_ORDER;
+  window.METHOD_SHUFFLE_ORDER = METHOD_SHUFFLE_ORDER;
+
+  // Helper function to get method name at a given position for a given trial
+  // trialIndex: 0-27, position: 0-3
+  window.getMethodAtPosition = function(trialIndex, position) {
+    return methods[METHOD_SHUFFLE_ORDER[trialIndex][position]];
+  };
+
+  const totalTrials = 28;
+  let currentTrialIndex = 1;
+
+  const videoGrid = document.getElementById('video-grid');
+  // const trialLabel = document.getElementById('trial-label'); // TRIAL LABEL IS SHUFFLED; GIVES THE TRUE TRIAL NUMBER
+  const currentTrialSpan = document.getElementById('current-trial');
+  const totalTrialsSpan = document.getElementById('total-trials');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  // Initialize
+  totalTrialsSpan.textContent = totalTrials;
+
+  // Convert display index (1-28) to actual trial ID (6-33)
+  // Uses the predetermined shuffle order
+  function getActualTrialId(displayIndex) {
+    // Get shuffled trial number (1-28) from the shuffle array
+    const shuffledTrialNumber = TRIAL_SHUFFLE_ORDER[displayIndex - 1];
+    // Convert to actual trial ID (6-33)
+    return shuffledTrialNumber + 5;
+  }
+
+  function loadTrial(displayIndex) {
+    if (displayIndex < 1 || displayIndex > totalTrials) return;
+
+    currentTrialIndex = displayIndex;
+    const shuffledTrialNumber = TRIAL_SHUFFLE_ORDER[displayIndex - 1];
+    const actualTrialId = getActualTrialId(displayIndex);
+    const methodShuffleForThisTrial = METHOD_SHUFFLE_ORDER[displayIndex - 1];
+
+    // Clear the grid
+    videoGrid.innerHTML = '';
+
+    // Create video elements using the shuffled method order for this trial
+    // Loop through positions 0-3 and use the shuffle order to get the actual method
+    methodShuffleForThisTrial.forEach(methodIndex => {
+      const method = methods[methodIndex];
+
+      const videoItem = document.createElement('div');
+      videoItem.className = 'video-item';
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'video-wrapper';
+
+      // All trials 6-33 have all 4 methods available
+      const video = document.createElement('video');
+      video.setAttribute('controls', '');
+      video.setAttribute('autoplay', '');
+      video.setAttribute('loop', '');
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('preload', 'auto');
+      video.src = `static/robot_videos/720p_${actualTrialId}_${method}_sanitized.mp4`;
+
+      wrapper.appendChild(video);
+
+      // METHOD LABEL IS SHUFFLED; GIVES THE TRUE METHOD NAME
+      //const label = document.createElement('div');
+      //label.className = 'video-label';
+      //label.textContent = methodLabels[method];
+
+      videoItem.appendChild(wrapper);
+      //videoItem.appendChild(label);
+      videoGrid.appendChild(videoItem);
+    });
+
+    // Update UI
+    // trialLabel is removed - no title at the top
+    // Show the sequential position in the progress counter
+    currentTrialSpan.textContent = displayIndex;
+
+    // Update button states
+    prevBtn.disabled = displayIndex === 1;
+    nextBtn.disabled = displayIndex === totalTrials;
+
+    // Auto-play all videos
+    setTimeout(() => {
+      videoGrid.querySelectorAll('video').forEach(v => {
+        v.play().catch(() => {});
+      });
+    }, 100);
+  }
+
+  // Event listeners
+  prevBtn.addEventListener('click', () => {
+    if (currentTrialIndex > 1) {
+      loadTrial(currentTrialIndex - 1);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentTrialIndex < totalTrials) {
+      loadTrial(currentTrialIndex + 1);
+    }
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      prevBtn.click();
+    } else if (e.key === 'ArrowRight') {
+      nextBtn.click();
+    }
+  });
+
+  // Load first trial
+  loadTrial(1);
+})();
+</script>
+
+</body>
+</html>
