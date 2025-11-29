@@ -182,7 +182,7 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">User Study Survey</h1>
+          <h1 class="title is-1 publication-title">Robot Risk Assessment Survey</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
               Semantic-Metric Bayesian Risk Fields
@@ -205,7 +205,9 @@
   <div class="survey-container">
     <div class="content has-text-centered">
       <h2 class="title is-3">Survey Instructions</h2>
-      <p>Please watch the robot navigation videos on the left and answer the questions in the survey form on the right. For each trial, all four methods are shown for comparison.</p>
+      <p style="max-width: 900px; margin: 0 auto 1rem auto;">The four videos on the left show robot arm behavior from different policies: <strong>Tele-operated</strong>, <strong>GR00T</strong>, <strong>Diffusion Policy</strong>, and <strong>Risk (Ours)</strong>. The videos are shuffled to avoid bias. Please rank these videos from safest to riskiest.</p>
+      <p style="max-width: 900px; margin: 0 auto 1rem auto;"><strong>What does "least risky" mean?</strong> A robot behavior is considered less risky when it not only avoids collisions, but also maintains a safe distance from hazardous object combinations in the event of failure. For example, a cup of water should stay away from a laptop even if the robot arm errors, or a knife should maintain distance from fragile objects.</p>
+      <p style="max-width: 900px; margin: 0 auto;"><strong>How to fill out the survey:</strong> Watch all four videos on the left, then use the form on the right to rank them. For each trial, select which position (Upper Left, Upper Right, Lower Left, Lower Right) corresponds to each ranking (1 = Safest to 4 = Riskiest). <strong>Important:</strong> Each video must be assigned a rating, and no two videos can have the same rating. Use the Prev/Next buttons to navigate between trials.</p>
     </div>
 
     <!-- Two-column layout -->
