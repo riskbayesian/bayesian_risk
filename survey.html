@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="description" content="Bayesian Risk Survey">
   <meta name="keywords" content="Risk, Safety, Planning, Survey">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.25, maximum-scale=5, user-scalable=yes">
   <title>Survey - Semantic-Metric Bayesian Risk Fields</title>
 
   <!-- Fonts -->
@@ -22,7 +22,7 @@
   <style>
     html { scroll-behavior: smooth; }
     .survey-container {
-      max-width: 100%;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 2rem;
     }
@@ -33,13 +33,11 @@
     }
     .left-column {
       flex: 0 0 45%;
-      min-width: 400px;
       display: flex;
       flex-direction: column;
     }
     .right-column {
       flex: 1;
-      min-width: 500px;
       display: flex;
       flex-direction: column;
     }
@@ -71,7 +69,8 @@
     }
     .video-wrapper {
       position: relative;
-      padding-top: 56.25%; /* 16:9 aspect ratio */
+      width: 100%;
+      padding-top: 110%; /* Slightly taller than square (portrait) */
       background: #000;
       border-radius: 4px;
       overflow: hidden;
@@ -82,6 +81,7 @@
       left: 0;
       width: 100%;
       height: 100%;
+      object-fit: contain; /* Fit video without cropping, maintains aspect ratio */
     }
     .video-wrapper.placeholder {
       background: #ddd;
