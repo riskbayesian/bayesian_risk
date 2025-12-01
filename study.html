@@ -228,7 +228,7 @@
             </button>
 
             <div class="progress-text">
-              <span id="current-trial">1</span> / <span id="total-trials">28</span>
+              <span id="current-trial">1</span> / <span id="total-trials">16</span>
             </div>
 
             <button id="next-btn" class="button is-medium is-primary">
@@ -285,13 +285,26 @@
     'risk': 'Risk (Ours)'
   };
 
-  // Predetermined shuffle order for trials 1-28
-  // This array maps display order (index 0-27) to trial numbers (1-28)
+  // Predetermined shuffle order for trials (filtered to keep only 16 trials)
+  // This array maps display order (index 0-15) to trial numbers
   // To access from outside this scope, use: window.TRIAL_SHUFFLE_ORDER
   const TRIAL_SHUFFLE_ORDER = [
-    14, 7, 22, 3, 19, 11, 26, 8, 15, 2,
-    24, 17, 5, 28, 12, 20, 9, 4, 25, 16,
-    1, 13, 6, 21, 10, 27, 18, 23
+    14,  // Trial 1
+    22,  // Trial 3
+    19,  // Trial 5
+    11,  // Trial 6
+    8,   // Trial 8
+    24,  // Trial 11
+    17,  // Trial 12
+    20,  // Trial 16
+    9,   // Trial 17
+    4,   // Trial 18
+    25,  // Trial 19
+    6,   // Trial 23
+    21,  // Trial 24
+    10,  // Trial 25
+    18,  // Trial 27
+    23   // Trial 28
   ];
 
   // Predetermined shuffle order for methods (videos within each trial)
@@ -305,31 +318,19 @@
   //   Position 3 (bottom-right) shows 'vla'
   const METHOD_SHUFFLE_ORDER = [
     [2, 0, 3, 1],  // Trial 1
-    [1, 3, 0, 2],  // Trial 2
     [3, 2, 1, 0],  // Trial 3
-    [0, 1, 2, 3],  // Trial 4
     [2, 3, 0, 1],  // Trial 5
     [1, 0, 3, 2],  // Trial 6
-    [3, 1, 2, 0],  // Trial 7
     [0, 2, 1, 3],  // Trial 8
-    [1, 2, 3, 0],  // Trial 9
-    [3, 0, 2, 1],  // Trial 10
     [2, 1, 0, 3],  // Trial 11
     [0, 3, 1, 2],  // Trial 12
-    [1, 3, 2, 0],  // Trial 13
-    [3, 0, 1, 2],  // Trial 14
-    [2, 1, 3, 0],  // Trial 15
     [0, 2, 3, 1],  // Trial 16
     [3, 2, 0, 1],  // Trial 17
     [1, 0, 2, 3],  // Trial 18
     [2, 3, 1, 0],  // Trial 19
-    [0, 1, 3, 2],  // Trial 20
-    [3, 1, 0, 2],  // Trial 21
-    [1, 2, 0, 3],  // Trial 22
     [2, 0, 1, 3],  // Trial 23
     [0, 3, 2, 1],  // Trial 24
     [1, 3, 0, 2],  // Trial 25
-    [3, 2, 1, 0],  // Trial 26
     [2, 0, 3, 1],  // Trial 27
     [0, 1, 2, 3]   // Trial 28
   ];
@@ -344,7 +345,7 @@
     return methods[METHOD_SHUFFLE_ORDER[trialIndex][position]];
   };
 
-  const totalTrials = 28;
+  const totalTrials = 16;
   let currentTrialIndex = 1;
 
   const videoGrid = document.getElementById('video-grid');
@@ -357,12 +358,12 @@
   // Initialize
   totalTrialsSpan.textContent = totalTrials;
 
-  // Convert display index (1-28) to actual trial ID (6-33)
+  // Convert display index (1-16) to actual trial ID
   // Uses the predetermined shuffle order
   function getActualTrialId(displayIndex) {
-    // Get shuffled trial number (1-28) from the shuffle array
+    // Get shuffled trial number from the shuffle array
     const shuffledTrialNumber = TRIAL_SHUFFLE_ORDER[displayIndex - 1];
-    // Convert to actual trial ID (6-33)
+    // Convert to actual trial ID (adds 5 to get the video file number)
     return shuffledTrialNumber + 5;
   }
 
@@ -388,7 +389,7 @@
       const wrapper = document.createElement('div');
       wrapper.className = 'video-wrapper';
 
-      // All trials 6-33 have all 4 methods available
+      // All trials have all 4 methods available
       const video = document.createElement('video');
       video.setAttribute('controls', '');
       video.setAttribute('autoplay', '');
