@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Bayesian Risk Value Function Study">
+  <meta name="keywords" content="Risk, Safety, Planning, Study, Value Function">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.25, maximum-scale=5, user-scalable=yes">
+  <title>Value Function Study - Semantic-Metric Bayesian Risk Fields</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <!-- Bulma & site CSS (Nerfies-style) -->
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <style>
+    html { scroll-behavior: smooth; }
+    .study-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .main-content-layout {
+      display: flex;
+      gap: 2rem;
+      align-items: stretch;
+    }
+    .left-column {
+      flex: 0 0 45%;
+      display: flex;
+      flex-direction: column;
+    }
+    .right-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .video-grid-container {
+      background: #f5f5f5;
+      padding: 2rem;
+      border-radius: 8px;
+      position: sticky;
+      top: 2rem;
+      display: flex;
+      flex-direction: column;
+      height: fit-content;
+    }
+    .environment-title {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #363636;
+    }
+    .navigation-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+    .progress-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #363636;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .video-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 aspect ratio (landscape) */
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .video-wrapper video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .video-label {
+      margin-top: 0.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #363636;
+    }
+    .google-form-section {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .google-form-section .content {
+      margin-bottom: 0.5rem;
+    }
+    .google-form-section .content p {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .google-form-container {
+      margin-top: 0.75rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .google-form-container iframe {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      border: none;
+      border-radius: 8px;
+    }
+
+    /* Responsive design for smaller screens */
+    @media screen and (max-width: 1200px) {
+      .main-content-layout {
+        flex-direction: column;
+      }
+      .left-column, .right-column {
+        flex: 1;
+        min-width: 100%;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <!-- JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Risk Assessment Study</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              Semantic-Metric Bayesian Risk Fields
+            </span>
+          </div>
+          <div class="column has-text-centered" style="margin-top: 1rem;">
+            <a href="index.html" class="button is-light is-rounded">
+              <span class="icon"><i class="fas fa-arrow-left"></i></span>
+              <span>Back to Main Page</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Study Instructions -->
+<section class="section">
+  <div class="study-container">
+    <div class="content has-text-centered">
+      <h2 class="title is-3">Study Instructions</h2>
+      <p style="max-width: 900px; margin: 0 auto 1rem auto;">
+        The five videos on the left show different shelf configurations where a robot must place a cup. 
+        Please rank these shelf configurations from least risky to most risky for placing the cup.<br> 
+        <strong>There are two environments you need to complete the study: Shelf and Kitchen.</strong>
+      </p>
+      <p style="max-width: 900px; margin: 0 auto 1rem auto;">
+        <strong>What does "least risky" mean?</strong> 
+        A shelf configuration is considered less risky when placing a cup there maintains a safe distance from hazardous object combinations in the event of robot failure. 
+        For example, a shelf with electronics or fragile items nearby would be riskier than one with less sensitive objects. 
+        Consider what would happen if the robot arm had an error while placing or if the cup were to fall.
+      </p>
+      <p style="max-width: 900px; margin: 0 auto;">
+        <strong>How to fill out the study:</strong> 
+        Watch all five shelf videos on the left, then use the form on the right to rank them. 
+        Select which position corresponds to each ranking (1 = Least Risky to 5 = Most Risky). <br>
+      </p>
+      <p style="max-width: 900px; margin: 0 auto;">
+        <strong>Important:</strong> Each shelf must be assigned a rating, and no two shelves can have the same rating.
+      </p>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="main-content-layout">
+
+      <!-- Left Column - Videos -->
+      <div class="left-column">
+        <div class="video-grid-container">
+          <div class="environment-title" id="environment-title">
+            Shelf Environment while holding a Solo Cup
+          </div>
+
+          <div class="video-grid" id="video-grid">
+            <!-- Videos will be dynamically inserted here -->
+          </div>
+
+          <div class="navigation-controls">
+            <button id="prev-btn" class="button is-medium is-primary">
+              <span class="icon"><i class="fas fa-chevron-left"></i></span>
+              <span>Prev</span>
+            </button>
+
+            <div class="progress-text">
+              <span id="current-env">1</span> / <span id="total-envs">2</span>
+            </div>
+
+            <button id="next-btn" class="button is-medium is-primary">
+              <span>Next</span>
+              <span class="icon"><i class="fas fa-chevron-right"></i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Google Form -->
+      <div class="right-column">
+        <div class="google-form-section">
+          <div class="google-form-container">
+            <iframe
+              src="https://docs.google.com/forms/d/e/1FAIpQLSeYPso0oHc4N9grqVVOQNa_Acwwd-fcCi46rTdQxEqSWa8akg/viewform?embedded=true"
+              frameborder="0"
+              marginheight="0"
+              marginwidth="0">
+              Loading…
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  // Environment configuration
+  const environments = [
+    {
+      title: 'Shelf Environment while holding a Solo Cup',
+      videos: [
+        { label: 'Shelf 1', src: 'static/risk_aware_value_learner/shelf_1/shelf_1_rgb.mp4' },
+        { label: 'Shelf 2', src: 'static/risk_aware_value_learner/shelf_2/shelf_2_rgb.mp4' },
+        { label: 'Shelf 3', src: 'static/risk_aware_value_learner/shelf_3/shelf_3_rgb.mp4' },
+        { label: 'Shelf 4', src: 'static/risk_aware_value_learner/shelf_4/shelf_4_rgb.mp4' },
+        { label: 'Shelf 5', src: 'static/risk_aware_value_learner/shelf_5/shelf_5_rgb.mp4' }
+      ]
+    },
+    {
+      title: 'Kitchen Environment while holding a Solo Cup',
+      videos: [
+        { label: 'Kitchen to Coffee Machine', src: 'static/risk_aware_value_learner/kitchen_to_coffee_machine/kitchen_to_coffee_machine.mp4' },
+        { label: 'Kitchen to Fridge', src: 'static/risk_aware_value_learner/kitchen_to_fridge/kitchen_to_fridge.mp4' },
+        { label: 'Kitchen to Laptop', src: 'static/risk_aware_value_learner/kitchen_to_laptop/kitchen_to_laptop.mp4' },
+        { label: 'Kitchen to Microwave', src: 'static/risk_aware_value_learner/kitchen_to_microwave/kitchen_to_microwave.mp4' },
+        { label: 'Kitchen to Monitor', src: 'static/risk_aware_value_learner/kitchen_to_monitor/kitchen_to_monitor.mp4' }
+      ]
+    }
+  ];
+
+  const totalEnvironments = 2;
+  let currentEnvIndex = 1;
+
+  const videoGrid = document.getElementById('video-grid');
+  const environmentTitle = document.getElementById('environment-title');
+  const currentEnvSpan = document.getElementById('current-env');
+  const totalEnvsSpan = document.getElementById('total-envs');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  // Initialize
+  totalEnvsSpan.textContent = totalEnvironments;
+
+  function loadEnvironment(envIndex) {
+    if (envIndex < 1 || envIndex > totalEnvironments) return;
+
+    currentEnvIndex = envIndex;
+    const env = environments[envIndex - 1];
+
+    // Update title
+    environmentTitle.textContent = env.title;
+
+    // Clear the grid
+    videoGrid.innerHTML = '';
+
+    // Create video elements
+    env.videos.forEach(videoConfig => {
+      const videoItem = document.createElement('div');
+      videoItem.className = 'video-item';
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'video-wrapper';
+
+      const video = document.createElement('video');
+      video.setAttribute('controls', '');
+      video.setAttribute('autoplay', '');
+      video.setAttribute('loop', '');
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('preload', 'auto');
+      video.src = videoConfig.src;
+      video.playbackRate = 3.0;
+
+      wrapper.appendChild(video);
+
+      const label = document.createElement('div');
+      label.className = 'video-label';
+      label.textContent = videoConfig.label;
+
+      videoItem.appendChild(wrapper);
+      videoItem.appendChild(label);
+      videoGrid.appendChild(videoItem);
+    });
+
+    // Update UI
+    currentEnvSpan.textContent = envIndex;
+
+    // Update button states
+    prevBtn.disabled = envIndex === 1;
+    nextBtn.disabled = envIndex === totalEnvironments;
+
+    // Auto-play all videos
+    setTimeout(() => {
+      videoGrid.querySelectorAll('video').forEach(v => {
+        v.play().catch(() => {});
+      });
+    }, 100);
+  }
+
+  // Event listeners
+  prevBtn.addEventListener('click', () => {
+    if (currentEnvIndex > 1) {
+      loadEnvironment(currentEnvIndex - 1);
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentEnvIndex < totalEnvironments) {
+      loadEnvironment(currentEnvIndex + 1);
+    }
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      prevBtn.click();
+    } else if (e.key === 'ArrowRight') {
+      nextBtn.click();
+    }
+  });
+
+  // Load first environment
+  loadEnvironment(1);
+})();
+</script>
+
+</body>
+</html>
